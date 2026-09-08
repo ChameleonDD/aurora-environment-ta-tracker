@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>曙光号 · Environment TA 航行日志</title>
+<style>
+:root{
+  --bg:#0c0f16;
+  --bg2:#11151f;
+  --panel:#161b27;
+  --panel2:#1c2230;
+  --line:#252d3d;
+  --line2:#303a4e;
+  --ink:#e8ecf4;
+  --sub:#8b97ab;
+  --dim:#5c6883;
+  --accent:#d33b32;
+  --accent2:#ee5a4f;
+  --gold:#3f78c5;
+  --gold2:#76a7e8;
+  --green:#3fd48a;
+  --red:#e5555f;
+  --purple:#b57cff;
+  --glow-blue:0 0 20px rgba(77,141,255,.35);
+  --glow-gold:0 0 22px rgba(245,196,81,.4);
+  --glow-purple:0 0 22px rgba(181,124,255,.38);
+  --shadow:0 4px 24px rgba(0,0,0,.4);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+  background:
+    linear-gradient(115deg,rgba(211,59,50,.09) 0 13%,transparent 13% 100%),
+    radial-gradient(1200px 600px at 15% -5%, rgba(63,120,197,.12), transparent 60%),
+    var(--bg);
+  color:var(--ink);line-height:1.55;min-height:100vh;
+  -webkit-font-smoothing:antialiased;padding:26px 18px 70px;
+}
+.wrap{max-width:1120px;margin:0 auto}
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-thumb{background:var(--line2);border-radius:6px}
+::-webkit-scrollbar-track{background:transparent}
+
+/* ===== header ===== */
+header{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:22px}
+.title-box .kicker{font-size:11px;letter-spacing:.18em;color:var(--accent2);font-weight:700;text-transform:uppercase}
+h1{font-size:27px;font-weight:800;letter-spacing:-.01em;margin-top:6px;background:linear-gradient(90deg,#fff,#9fbfff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.title-box .sub{font-size:13px;color:var(--sub);margin-top:5px}
+.header-right{display:flex;gap:9px;align-items:center}
+.btn{border:1px solid var(--line2);background:var(--panel);color:var(--ink);font-size:12.5px;font-weight:600;padding:9px 14px;border-radius:10px;cursor:pointer;transition:.18s;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{border-color:var(--accent);background:var(--panel2);box-shadow:var(--glow-blue)}
+.btn.gold:hover{border-color:var(--gold);box-shadow:var(--glow-gold)}
+.btn.ghost{background:transparent}
+
+/* ===== level card ===== */
+.level-card{background:linear-gradient(135deg,var(--panel),var(--bg2));border:1px solid var(--line);border-radius:18px;padding:20px 22px;margin-bottom:16px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.level-card::before{content:"";position:absolute;inset:0;background:radial-gradient(600px 200px at 100% 0%,rgba(245,196,81,.08),transparent 60%);pointer-events:none}
+.level-top{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.rank-badge{flex-shrink:0;width:70px;height:70px;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(245,196,81,.18),rgba(245,196,81,.04));border:1.5px solid rgba(245,196,81,.4);box-shadow:var(--glow-gold)}
+.rank-badge .lv{font-size:9px;letter-spacing:.1em;color:var(--gold2);font-weight:700}
+.rank-badge .num{font-size:28px;font-weight:850;color:var(--gold2);line-height:1}
+.level-meta{flex:1;min-width:240px}
+.level-meta .rankname{font-size:18px;font-weight:750}
+.level-meta .rankname .tier{color:var(--gold2)}
+.level-meta .xp{font-size:12.5px;color:var(--sub);margin-top:3px}
+.streak-box{display:flex;gap:14px;text-align:center}
+.streak-box .s{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:9px 15px}
+.streak-box .s .v{font-size:21px;font-weight:800;color:var(--accent2)}
+.streak-box .s .v.fire{color:var(--gold2)}
+.streak-box .s .k{font-size:10.5px;color:var(--dim);letter-spacing:.03em;margin-top:1px}
+
+/* ===== progress bars section ===== */
+.bars{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+.bar-card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:17px 19px;box-shadow:var(--shadow)}
+.bar-card.wide{grid-column:1 / -1}
+.bar-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px}
+.bar-head .name{font-size:13.5px;font-weight:700;display:flex;align-items:center;gap:8px}
+.bar-head .name .ico{font-size:15px}
+.bar-head .pct{font-size:20px;font-weight:800;font-variant-numeric:tabular-nums}
+.pct.blue{color:var(--accent2)} .pct.gold{color:var(--gold2)} .pct.purple{color:var(--purple)} .pct.green{color:var(--green)}
+.track{height:12px;background:var(--bg);border-radius:20px;overflow:hidden;border:1px solid var(--line);position:relative}
+.fill{height:100%;border-radius:20px;width:0;transition:width .9s cubic-bezier(.22,1,.36,1);position:relative;overflow:hidden}
+.fill::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent);transform:translateX(-100%);animation:shine 2.6s infinite}
+@keyframes shine{0%{transform:translateX(-100%)}55%,100%{transform:translateX(200%)}}
+.fill.blue{background:linear-gradient(90deg,#3f6fd4,#6ea8ff);box-shadow:0 0 12px rgba(110,168,255,.5)}
+.fill.gold{background:linear-gradient(90deg,#d99f2b,#ffd97a);box-shadow:0 0 12px rgba(245,196,81,.5)}
+.fill.purple{background:linear-gradient(90deg,#8a4fe0,#c79bff);box-shadow:0 0 12px rgba(181,124,255,.5)}
+.fill.green{background:linear-gradient(90deg,#2aa96b,#5be3a0);box-shadow:0 0 12px rgba(63,212,138,.5)}
+.bar-sub{font-size:11.5px;color:var(--dim);margin-top:9px}
+
+/* month mini bars */
+.month-mini{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:4px}
+.mm{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:9px 6px;text-align:center;cursor:pointer;transition:.18s;position:relative}
+.mm:hover{border-color:var(--accent);transform:translateY(-2px)}
+.mm.active{border-color:var(--gold);background:var(--panel2)}
+.mm.done{border-color:var(--green)}
+.mm .mlabel{font-size:10px;color:var(--dim);font-weight:700;letter-spacing:.04em}
+.mm .mname{font-size:11px;color:var(--sub);margin:3px 0 6px;font-weight:600}
+.mm .mtrack{height:5px;background:#0a0d13;border-radius:10px;overflow:hidden}
+.mm .mfill{height:100%;background:linear-gradient(90deg,#3f6fd4,#6ea8ff);border-radius:10px;width:0;transition:width .7s ease}
+.mm.done .mfill{background:linear-gradient(90deg,#2aa96b,#5be3a0)}
+.mm .mpct{font-size:10px;color:var(--sub);margin-top:5px;font-weight:700}
+.mm .check{position:absolute;top:-6px;right:-6px;width:18px;height:18px;border-radius:50%;background:var(--green);color:#04160d;font-size:11px;display:none;align-items:center;justify-content:center;font-weight:900;box-shadow:0 0 10px rgba(63,212,138,.7)}
+.mm.done .check{display:flex}
+
+/* ===== layout main ===== */
+.main{display:grid;grid-template-columns:1.55fr 1fr;gap:16px;margin-top:16px}
+.col-panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px 20px;box-shadow:var(--shadow)}
+.panel-title{font-size:14px;font-weight:750;display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.panel-title .l{display:flex;align-items:center;gap:8px}
+.panel-title .ico{font-size:16px}
+.pill{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:var(--panel2);border:1px solid var(--line2);color:var(--sub)}
+
+/* task groups (month tasks) */
+.wk-group{margin-bottom:14px}
+.wk-group:last-child{margin-bottom:0}
+.wk-title{font-size:11.5px;font-weight:700;color:var(--accent2);letter-spacing:.04em;margin-bottom:8px;display:flex;align-items:center;gap:7px}
+.wk-title .star{color:var(--gold2)}
+.task{display:flex;align-items:flex-start;gap:11px;padding:9px 11px;border-radius:10px;border:1px solid transparent;transition:.15s;cursor:pointer}
+.task:hover{background:var(--panel2);border-color:var(--line)}
+.task .box{flex-shrink:0;width:20px;height:20px;border-radius:6px;border:1.8px solid var(--line2);margin-top:1px;display:flex;align-items:center;justify-content:center;transition:.15s;font-size:12px;color:transparent}
+.task.done .box{background:var(--green);border-color:var(--green);color:#04160d;font-weight:900}
+.task .tx{font-size:12.8px;color:var(--ink);transition:.15s}
+.task.done .tx{color:var(--dim);text-decoration:line-through}
+.task .xp{margin-left:auto;flex-shrink:0;font-size:10.5px;font-weight:700;color:var(--gold2);opacity:.7;white-space:nowrap}
+.task.star .tx{font-weight:600}
+.task.milestone{background:linear-gradient(90deg,rgba(245,196,81,.06),transparent);border-color:rgba(245,196,81,.2)}
+
+/* daily log */
+.log-input{width:100%;background:var(--bg);border:1px solid var(--line2);border-radius:12px;padding:12px 14px;color:var(--ink);font-size:13px;font-family:inherit;resize:vertical;min-height:80px;line-height:1.6;transition:.15s}
+.log-input:focus{outline:none;border-color:var(--accent);box-shadow:var(--glow-blue)}
+.log-input::placeholder{color:var(--dim)}
+.log-row{display:flex;gap:8px;margin-top:10px;align-items:center}
+.log-row .btn{flex:1;justify-content:center}
+.log-row .btn.primary{background:linear-gradient(135deg,#3f6fd4,#5a86e0);border-color:transparent;color:#fff}
+.log-row .btn.primary:hover{box-shadow:var(--glow-blue)}
+.log-list{margin-top:14px;max-height:320px;overflow-y:auto;padding-right:4px}
+.log-item{background:var(--bg);border:1px solid var(--line);border-radius:11px;padding:11px 13px;margin-bottom:9px;position:relative}
+.log-item .date{font-size:10.5px;color:var(--dim);font-weight:700;letter-spacing:.03em;display:flex;align-items:center;gap:7px}
+.log-item .date .bonus{color:var(--purple);background:rgba(181,124,255,.12);border:1px solid rgba(181,124,255,.3);padding:1px 7px;border-radius:20px;font-size:9.5px}
+.log-item .body{font-size:12.8px;color:var(--sub);margin-top:5px;white-space:pre-wrap;word-break:break-word}
+.log-item .del{position:absolute;top:9px;right:10px;color:var(--dim);cursor:pointer;font-size:14px;opacity:0;transition:.15s}
+.log-item:hover .del{opacity:1}
+.log-item .del:hover{color:var(--red)}
+.empty{text-align:center;color:var(--dim);font-size:12.5px;padding:24px 10px}
+
+/* extra achievements */
+.ach-add{display:flex;gap:8px;margin-bottom:12px}
+.ach-add input{flex:1;background:var(--bg);border:1px solid var(--line2);border-radius:10px;padding:9px 12px;color:var(--ink);font-size:12.5px;font-family:inherit}
+.ach-add input:focus{outline:none;border-color:var(--purple)}
+.ach-add .btn.purple{background:linear-gradient(135deg,#8a4fe0,#a06ff0);border-color:transparent;color:#fff}
+.ach-add .btn.purple:disabled{opacity:.45;cursor:not-allowed}
+.ach-list{display:flex;flex-direction:column;gap:8px}
+.ach-item{background:var(--bg);border:1px solid var(--line);border-left:3px solid var(--purple);border-radius:10px;padding:10px 13px;display:flex;align-items:center;gap:10px;position:relative;animation:pop .4s ease}
+@keyframes pop{0%{transform:scale(.9);opacity:0}100%{transform:scale(1);opacity:1}}
+.ach-item .medal{font-size:16px;flex-shrink:0}
+.ach-item .txt{font-size:12.8px;flex:1}
+.ach-item .txt .d{font-size:10px;color:var(--dim);margin-top:2px;display:flex;align-items:center;gap:6px}
+.ach-item .xp-badge{font-size:10px;font-weight:700;padding:1px 7px;border-radius:20px;white-space:nowrap}
+.ach-item .xp-badge.high{color:var(--gold2);background:rgba(245,196,81,.15);border:1px solid rgba(245,196,81,.3)}
+.ach-item .xp-badge.mid{color:var(--green);background:rgba(63,212,138,.12);border:1px solid rgba(63,212,138,.25)}
+.ach-item .xp-badge.low{color:var(--sub);background:var(--panel2);border:1px solid var(--line)}
+.ach-item .ai-eval{font-size:11px;color:var(--purple);margin-top:4px;font-style:italic;line-height:1.4}
+.ach-item .del{color:var(--dim);cursor:pointer;font-size:14px;opacity:0;transition:.15s;flex-shrink:0}
+.ach-item:hover .del{opacity:1}
+.ach-item .del:hover{color:var(--red)}
+
+/* task tutorials */
+.tut-links{margin-top:7px;padding-top:7px;border-top:1px dashed var(--line);display:flex;flex-wrap:wrap;gap:6px;max-height:0;overflow:hidden;transition:max-height .3s ease}
+.tut-links.open{max-height:200px}
+.tut-tag{font-size:10.5px;font-weight:600;padding:3px 9px;border-radius:20px;border:1px solid;display:inline-flex;align-items:center;gap:4px;cursor:default;white-space:nowrap}
+.tut-tag.yt{color:#ff6b6b;border-color:rgba(255,107,107,.3);background:rgba(255,107,107,.08)}
+.tut-tag.doc{color:var(--accent2);border-color:rgba(110,168,255,.3);background:rgba(110,168,255,.08)}
+.tut-tag.bili{color:#fb8bce;border-color:rgba(251,139,206,.3);background:rgba(251,139,206,.08)}
+.tut-tag a{color:inherit;text-decoration:none}
+.tut-tag a:hover{text-decoration:underline}
+.tut-toggle{font-size:10.5px;color:var(--dim);cursor:pointer;margin-top:5px;display:inline-flex;align-items:center;gap:4px;padding:2px 0;transition:.15s;user-select:none}
+.tut-toggle:hover{color:var(--accent2)}
+.tut-toggle .arr{transition:.2s;display:inline-block}
+.tut-toggle.open .arr{transform:rotate(90deg)}
+
+/* ===== AI panel ===== */
+.ai-panel{grid-column:1 / -1;background:linear-gradient(135deg,var(--panel),var(--bg2));border:1px solid var(--line);border-radius:16px;padding:18px 20px;box-shadow:var(--shadow);margin-top:16px}
+.ai-out{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:15px 17px;font-size:13px;color:var(--sub);line-height:1.7;min-height:70px;white-space:pre-wrap;margin-top:12px}
+.ai-out.think{color:var(--dim);font-style:italic}
+.ai-row{display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+.ai-row .btn.ai{background:linear-gradient(135deg,#6a4fd4,#4d8dff);border-color:transparent;color:#fff;font-weight:700}
+.ai-row .btn.ai:hover{box-shadow:var(--glow-purple)}
+.ai-hint{font-size:11px;color:var(--dim);flex:1;min-width:180px}
+
+/* ===== modal ===== */
+.overlay{position:fixed;inset:0;background:rgba(4,7,12,.75);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:100;padding:20px}
+.overlay.show{display:flex}
+.modal{background:var(--panel);border:1px solid var(--line2);border-radius:18px;padding:26px;max-width:460px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.6);animation:pop .3s ease}
+.modal h3{font-size:17px;font-weight:750;margin-bottom:6px}
+.modal p.d{font-size:12.5px;color:var(--sub);margin-bottom:16px;line-height:1.6}
+.field{margin-bottom:14px}
+.field label{font-size:11.5px;font-weight:700;color:var(--sub);display:block;margin-bottom:6px;letter-spacing:.02em}
+.field input,.field select{width:100%;background:var(--bg);border:1px solid var(--line2);border-radius:10px;padding:10px 12px;color:var(--ink);font-size:13px;font-family:inherit}
+.field input:focus,.field select:focus{outline:none;border-color:var(--accent)}
+.modal-actions{display:flex;gap:9px;margin-top:20px}
+.modal-actions .btn{flex:1;justify-content:center}
+.modal-actions .btn.primary{background:linear-gradient(135deg,#3f6fd4,#5a86e0);border-color:transparent;color:#fff}
+.note{font-size:11px;color:var(--dim);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:9px 11px;margin-top:6px;line-height:1.55}
+
+/* toast + levelup */
+.toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(120px);background:var(--panel2);border:1px solid var(--line2);color:var(--ink);padding:12px 20px;border-radius:12px;font-size:13px;font-weight:600;box-shadow:var(--shadow);z-index:200;transition:transform .4s cubic-bezier(.22,1,.36,1);display:flex;align-items:center;gap:9px}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.gold{border-color:var(--gold);box-shadow:var(--glow-gold)}
+.toast.purple{border-color:var(--purple);box-shadow:var(--glow-purple)}
+
+.levelup{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:300;pointer-events:none}
+.levelup.show{display:flex}
+.levelup .burst{text-align:center;animation:burstIn .6s cubic-bezier(.22,1.4,.36,1)}
+@keyframes burstIn{0%{transform:scale(.3);opacity:0}100%{transform:scale(1);opacity:1}}
+.levelup .ring{font-size:64px;filter:drop-shadow(0 0 24px rgba(245,196,81,.8))}
+.levelup .lvtxt{font-size:15px;letter-spacing:.2em;color:var(--gold2);font-weight:800;margin-top:6px}
+.levelup .lvname{font-size:26px;font-weight:850;color:#fff;margin-top:4px;text-shadow:0 0 30px rgba(245,196,81,.6)}
+
+footer{text-align:center;color:var(--dim);font-size:11.5px;margin-top:30px}
+footer b{color:var(--sub)}
+
+/* ===== 倒计时横幅 ===== */
+.countdown-bar{background:linear-gradient(90deg,var(--panel),var(--bg2));border:1px solid var(--line);border-radius:14px;padding:13px 20px;margin-bottom:16px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;box-shadow:var(--shadow)}
+.cd-main{display:flex;align-items:center;gap:16px;flex:1;min-width:260px}
+.cd-day{font-size:28px;font-weight:850;font-variant-numeric:tabular-nums;line-height:1}
+.cd-day.ok{color:var(--accent2)} .cd-day.warn{color:var(--gold2)} .cd-day.over{color:var(--red)}
+.cd-label{font-size:11.5px;color:var(--sub)}
+.cd-label b{display:block;font-size:13px;font-weight:700;color:var(--ink);margin-bottom:2px}
+.cd-pace{display:flex;gap:12px;flex-wrap:wrap}
+.cd-stat{text-align:center;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:7px 14px}
+.cd-stat .v{font-size:15px;font-weight:800;font-variant-numeric:tabular-nums}
+.cd-stat .v.ok{color:var(--green)} .cd-stat .v.warn{color:var(--gold2)} .cd-stat .v.late{color:var(--red)}
+.cd-stat .k{font-size:10px;color:var(--dim);margin-top:2px}
+.cd-setup{font-size:11.5px;color:var(--accent2);cursor:pointer;text-decoration:underline;white-space:nowrap}
+
+/* ===== 习惯打卡环 ===== */
+.habits-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.habit-btn{flex:1;min-width:120px;background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:12px 16px;cursor:pointer;transition:.18s;text-align:center;position:relative}
+.habit-btn:hover{border-color:var(--accent);background:var(--panel2)}
+.habit-btn.done{border-color:var(--green);background:rgba(63,212,138,.08)}
+.habit-btn.done::after{content:'✓';position:absolute;top:6px;right:9px;font-size:12px;font-weight:900;color:var(--green)}
+.habit-btn .hico{font-size:20px;line-height:1}
+.habit-btn .htitle{font-size:12px;font-weight:700;margin-top:5px;color:var(--ink)}
+.habit-btn .hsub{font-size:10.5px;color:var(--dim);margin-top:2px}
+.habit-btn.done .htitle{color:var(--green)}
+.habits-date{font-size:11px;color:var(--dim);margin-bottom:8px;display:flex;align-items:center;justify-content:space-between}
+.habits-date b{color:var(--sub)}
+
+/* ===== 周回顾抽屉 ===== */
+.review-drawer{grid-column:1 / -1;background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:var(--shadow);margin-top:16px}
+.review-head{padding:16px 20px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;transition:.15s}
+.review-head:hover{background:var(--panel2)}
+.review-head .l{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:750}
+.review-head .arr{color:var(--dim);transition:.25s}
+.review-drawer.open .arr{transform:rotate(180deg)}
+.review-body{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.review-drawer.open .review-body{max-height:800px}
+.review-inner{padding:0 20px 20px}
+.week-list{display:flex;flex-direction:column;gap:9px;margin-bottom:14px;max-height:260px;overflow-y:auto}
+.week-item{background:var(--bg);border:1px solid var(--line);border-radius:11px;padding:10px 14px}
+.week-item .wdate{font-size:10.5px;color:var(--dim);font-weight:700;margin-bottom:4px}
+.week-item .wsummary{font-size:12.5px;color:var(--sub);line-height:1.55}
+.week-item .wsummary.ai{color:var(--ink)}
+.review-actions{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:14px}
+.ai-out-review{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:14px 16px;font-size:12.8px;color:var(--sub);line-height:1.7;white-space:pre-wrap;min-height:60px;display:none}
+.ai-out-review.show{display:block}
+.ai-out-review.think{color:var(--dim);font-style:italic}
+
+/* ===== 知识卡片库 ===== */
+.card-library{grid-column:1 / -1;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px 20px;box-shadow:var(--shadow);margin-top:16px}
+.card-filter{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.filter-btn{font-size:11.5px;font-weight:700;padding:5px 13px;border-radius:20px;border:1px solid var(--line2);background:var(--bg);color:var(--sub);cursor:pointer;transition:.15s}
+.filter-btn:hover,.filter-btn.active{background:var(--panel2);border-color:var(--purple);color:var(--purple)}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px}
+.kcard{background:var(--bg);border:1px solid var(--line);border-left:3px solid;border-radius:11px;padding:12px 14px;position:relative;animation:pop .3s ease}
+.kcard[data-cat="PCG"]{border-left-color:#4d8dff}
+.kcard[data-cat="Houdini"]{border-left-color:#ffd97a}
+.kcard[data-cat="材质"]{border-left-color:#3fd48a}
+.kcard[data-cat="工具"]{border-left-color:#ff6b6b}
+.kcard[data-cat="通用"]{border-left-color:#b57cff}
+.kcard[data-cat="其他"]{border-left-color:#5c6883}
+.kcard .kcat{font-size:9.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px;opacity:.7}
+.kcard .ktxt{font-size:12.8px;color:var(--ink);line-height:1.45}
+.kcard .kmeta{font-size:10px;color:var(--dim);margin-top:7px;display:flex;align-items:center;gap:7px}
+.kcard .kxp{font-size:10px;font-weight:700;padding:1px 7px;border-radius:20px}
+.kcard .kdel{position:absolute;top:8px;right:10px;color:var(--dim);cursor:pointer;font-size:13px;opacity:0;transition:.15s}
+.kcard:hover .kdel{opacity:1}
+.kcard .kdel:hover{color:var(--red)}
+
+@media(max-width:820px){
+  .bars{grid-template-columns:1fr}
+  .main{grid-template-columns:1fr}
+  .month-mini{grid-template-columns:repeat(4,1fr)}
+  h1{font-size:22px}
+  .habits-row{gap:7px}
+  .habit-btn{min-width:90px;padding:10px 10px}
+  .cd-pace{gap:8px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HEADER -->
+  <header>
+    <div class="title-box">
+      <div class="kicker">◈ PROJECT AURORA · PRODUCTION LOG</div>
+      <h1>曙光号 · Environment TA 航行日志</h1>
+      <div class="sub">14 周，把既有美术规则变成可运行的 Building / Damage / Overgrowth 管线。</div>
+    </div>
+    <div class="header-right">
+      <button class="btn ghost" id="btnData">⇅ 数据</button>
+      <button class="btn gold" id="btnKey">⚙ AI 设置</button>
+    </div>
+  </header>
+
+  <!-- COUNTDOWN BAR -->
+  <div class="countdown-bar" id="countdownBar">
+    <div class="cd-main">
+      <div>
+        <div class="cd-day" id="cdDays">—</div>
+        <div style="font-size:10px;color:var(--dim);margin-top:2px">天剩余</div>
+      </div>
+      <div class="cd-label"><b id="cdTitle">设置开始日期</b><span id="cdSub">点右侧「设置日期」开始计时</span></div>
+    </div>
+    <div class="cd-pace" id="cdPace"></div>
+    <span class="cd-setup" id="cdSetup">📅 设置日期</span>
+  </div>
+
+  <!-- HABIT RING -->
+  <div id="habitSection">
+    <div class="habits-date"><b id="habitDateLabel"></b><span id="habitReset" style="cursor:pointer;color:var(--dim);font-size:11px">↺ 重置今日</span></div>
+    <div class="habits-row" id="habitsRow"></div>
+  </div>
+
+  <!-- LEVEL CARD -->
+  <div class="level-card">
+    <div class="level-top">
+      <div class="rank-badge"><span class="lv">LV</span><span class="num" id="lvNum">1</span></div>
+      <div class="level-meta">
+        <div class="rankname">当前称号：<span class="tier" id="rankName">灰阶学徒</span></div>
+        <div class="xp" id="xpLine">经验 0 XP · 距下一级还差 100 XP</div>
+        <div class="track" style="margin-top:8px;height:8px"><div class="fill gold" id="xpFill"></div></div>
+      </div>
+      <div class="streak-box">
+        <div class="s"><div class="v fire" id="streakV">0</div><div class="k">🔥 连续天</div></div>
+        <div class="s"><div class="v" id="daysV">0</div><div class="k">打卡总天</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN PROGRESS BARS -->
+  <div class="bars">
+    <div class="bar-card wide">
+      <div class="bar-head">
+        <div class="name"><span class="ico">◈</span>14 周任务总进度</div>
+        <div class="pct blue" id="totalPct">0%</div>
+      </div>
+      <div class="track"><div class="fill blue" id="totalFill"></div></div>
+      <div class="bar-sub" id="totalSub">共 14 周任务 · 已完成 0 项</div>
+      <div class="month-mini" id="monthMini"></div>
+    </div>
+
+    <div class="bar-card">
+      <div class="bar-head">
+        <div class="name"><span class="ico">📅</span>当前阶段 · <span id="curMonthName">M1 地基</span></div>
+        <div class="pct green" id="monthPct">0%</div>
+      </div>
+      <div class="track"><div class="fill green" id="monthFill"></div></div>
+      <div class="bar-sub" id="monthSub">点上方阶段切换 · 完成整阶段自动亮绿</div>
+    </div>
+
+    <div class="bar-card">
+      <div class="bar-head">
+        <div class="name"><span class="ico">🏅</span>额外成就（计划外收获）</div>
+        <div class="pct purple" id="achPct">Lv.0</div>
+      </div>
+      <div class="track"><div class="fill purple" id="achFill"></div></div>
+      <div class="bar-sub" id="achSub">每记 1 条计划外收获 +1 · 满 10 条升一档</div>
+    </div>
+  </div>
+
+  <!-- MAIN GRID -->
+  <div class="main">
+
+    <!-- LEFT: month tasks -->
+    <div class="col-panel">
+      <div class="panel-title">
+        <div class="l"><span class="ico">🎯</span><span id="taskMonthTitle">M1 · 地基</span> 任务</div>
+        <span class="pill" id="taskCount">0 / 4</span>
+      </div>
+      <div id="taskArea"></div>
+    </div>
+
+    <!-- RIGHT: daily log + achievements -->
+    <div class="col-panel">
+      <div class="panel-title"><div class="l"><span class="ico">📖</span>今日日志</div><span class="pill" id="todayPill"></span></div>
+      <textarea class="log-input" id="logInput" placeholder="今天学了/做了什么？&#10;例：完成墙面 Normal + dot 分类，并录制 30 秒 Debug 演示。"></textarea>
+      <div class="log-row">
+        <button class="btn primary" id="btnLog">＋ 记录今天（+15 XP）</button>
+      </div>
+      <div class="log-list" id="logList"></div>
+
+      <div class="panel-title" style="margin-top:20px"><div class="l"><span class="ico">🏅</span>额外成就</div></div>
+      <div class="ach-add">
+        <input id="achInput" placeholder="计划外收获，例：解决了 HDA 属性丢失问题">
+        <button class="btn purple" id="btnAch">＋</button>
+      </div>
+      <div class="ach-list" id="achList"></div>
+    </div>
+
+    <!-- AI PANEL -->
+    <div class="ai-panel">
+      <div class="panel-title"><div class="l"><span class="ico">🤖</span>AI 学习教练 · 实时进度评估</div><span class="pill" id="aiStatus">未配置</span></div>
+      <div class="ai-row">
+        <button class="btn ai" id="btnAiEval">✦ 评估进度</button>
+        <button class="btn ghost" id="btnAiPlan">今天学什么？</button>
+        <button class="btn ghost" id="btnAiWeek">📋 生成本周回顾</button>
+        <span class="ai-hint">AI 读取你的勾选进度、日志和额外成就给出反馈。首次使用请先在「AI 设置」填入 key。</span>
+      </div>
+      <div class="ai-out" id="aiOut">点上方按钮，AI 会结合你当前的进度数据给出反馈。你的 key 只存在本机浏览器，不上传任何服务器（除你选定的 AI 接口外）。</div>
+    </div>
+
+  </div>
+
+  <!-- WEEKLY REVIEW DRAWER -->
+  <div class="review-drawer" id="reviewDrawer">
+    <div class="review-head" id="reviewHead">
+      <div class="l"><span style="font-size:16px">📋</span>周回顾存档 · 每周战报</div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <span class="pill" id="reviewCount">0 条</span>
+        <span class="review-head arr">▼</span>
+      </div>
+    </div>
+    <div class="review-body">
+      <div class="review-inner">
+        <div class="week-list" id="weekList"></div>
+        <div class="ai-out-review" id="aiOutReview"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD LIBRARY -->
+  <div class="card-library" id="cardLibrary">
+    <div class="panel-title">
+      <div class="l"><span class="ico">🗂️</span>知识卡片库 · 计划外收获分类</div>
+      <span class="pill" id="cardTotal">0 张</span>
+    </div>
+    <div class="card-filter" id="cardFilter"></div>
+    <div class="card-grid" id="cardGrid"></div>
+  </div>
+
+  <footer>数据全部保存在<b>本机浏览器</b> · 记得用「⇅ 数据」定期备份 · 曙光号 AURORA</footer>
+</div>
+
+<!-- ===== DATE SETUP MODAL ===== -->
+<div class="overlay" id="dateOverlay">
+  <div class="modal">
+    <h3>📅 设置计划日期</h3>
+    <p class="d">填入你正式开始这个 14 周计划的日期，系统会自动计算剩余天数和进度节奏。</p>
+    <div class="field"><label>开始日期</label><input type="date" id="startDateInput"></div>
+    <div class="note">💡 开始日期会影响"按时/偏慢/超前"的节奏判断。如果你已经学了一段时间，填实际开始学习的日期。</div>
+    <div class="modal-actions">
+      <button class="btn ghost" id="dateCancel">取消</button>
+      <button class="btn primary" id="dateSave">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODALS ===== -->
+<div class="overlay" id="keyOverlay">
+  <div class="modal">
+    <h3>⚙ AI 教练设置</h3>
+    <p class="d">填入你自己的 AI API key。key 只保存在本机浏览器（localStorage），不会上传到任何我方服务器。</p>
+    <div class="field">
+      <label>接口预设</label>
+      <select id="apiPreset">
+        <option value="deepseek">DeepSeek（便宜，推荐）</option>
+        <option value="openai">OpenAI 兼容</option>
+        <option value="custom">自定义</option>
+      </select>
+    </div>
+    <div class="field"><label>API Base URL</label><input id="apiBase" placeholder="https://api.deepseek.com/v1/chat/completions"></div>
+    <div class="field"><label>模型名</label><input id="apiModel" placeholder="deepseek-chat"></div>
+    <div class="field"><label>API Key</label><input id="apiKey" type="password" placeholder="sk-..."></div>
+    <div class="note">💡 推荐 DeepSeek：便宜、中文好、有 OpenAI 兼容接口。也可填任何 OpenAI 格式的兼容接口（含中转）。</div>
+    <div class="modal-actions">
+      <button class="btn ghost" id="keyCancel">取消</button>
+      <button class="btn primary" id="keySave">保存</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="dataOverlay">
+  <div class="modal">
+    <h3>⇅ 数据管理</h3>
+    <p class="d">导出把全部进度存成 JSON 文件备份；导入可从备份恢复或迁到别的设备/浏览器。</p>
+    <div class="modal-actions" style="flex-direction:column">
+      <button class="btn primary" id="btnExport" style="width:100%">⬇ 导出备份（JSON）</button>
+      <button class="btn" id="btnImport" style="width:100%">⬆ 导入备份</button>
+      <input type="file" id="importFile" accept="application/json" style="display:none">
+      <button class="btn ghost" id="btnReset" style="width:100%;color:var(--red)">⟲ 清空所有数据</button>
+      <button class="btn ghost" id="dataClose" style="width:100%">关闭</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<div class="levelup" id="levelup"><div class="burst"><div class="ring">🎖️</div><div class="lvtxt">LEVEL UP</div><div class="lvname" id="lvupName"></div></div></div>
+
+<script>
+/* ================= DATA MODEL ================= */
+// 内置曙光号 14 周任务，⭐=里程碑
+const PLAN = [
+  {id:'m1',label:'M1',name:'Houdini 地基',color:'blue',weeks:[
+    {w:'W1',t:'视觉宪法 → Production Rule Sheet；Houdini UI/SOP/Attribute；Normal + dot 分类墙与屋顶', xp:50},
+    {w:'W2',t:'Attribute / VEX 基础；Facade ID、Floor ID、Corner、Ground Contact；完成 Facade Analyzer', xp:50},
+    {w:'W3',t:'⭐ Project Skylark 核心段；完成符合曙光号语言的 Window + Door Socket System', xp:70, milestone:true},
+    {w:'W4',t:'⭐ Roof Edge / Corner / Ground Contact / Signage Candidate + Debug Mode；Semantic Building v0.7', xp:75, milestone:true},
+  ]},
+  {id:'m2',label:'M2',name:'Creator + Damage',color:'gold',weeks:[
+    {w:'W5',t:'⭐ 封装 HDA；Building / Window / Door / Signage / Debug 参数；完成多建筑压力测试', xp:75, milestone:true},
+    {w:'W6',t:'Boolean / VDB / Cleanup；Artist Damage Guide → Large Damage Prototype', xp:55},
+    {w:'W7',t:'Curvature / Border / Secondary Chips / Wear Mask / Exposed Structure；Damage Processor Beta', xp:60},
+    {w:'W8',t:'⭐ UV / Material Group / Houdini Engine；Exterior / Interior / Wear / Graphic Data 进入 UE', xp:80, milestone:true},
+  ]},
+  {id:'m3',label:'M3',name:'Growth + Unreal',color:'blue',weeks:[
+    {w:'W9',t:'Curve / Resample / Ray / xyzdist / primuv；完成墙面 Vine Prototype', xp:55},
+    {w:'W10',t:'⭐ 以 wall / roof_edge / ground_contact / damage_border 驱动 Macro–Medium–Micro Overgrowth', xp:70, milestone:true},
+    {w:'W11',t:'⭐ Building → Damage → Reclassify → Overgrowth；Houdini Engine Recook / Bake 与组合测试', xp:80, milestone:true},
+    {w:'W12',t:'⭐ Unreal PCG 做 rubble / weed / debris / props；复用已有资产；Hero Area 人工构图', xp:80, milestone:true},
+  ]},
+  {id:'m35',label:'M3.5',name:'最终收口',color:'gold',weeks:[
+    {w:'W13',t:'⭐ 按视觉宪法完成最终灯光 / 材质 / 构图，并记录优化前后技术数据', xp:80, milestone:true},
+    {w:'W14',t:'⭐ 禁止新功能；完成技术录屏、Beauty、20–40s Cinematic 与 Portfolio Page', xp:100, milestone:true},
+  ]},
+];
+
+const RANKS = [ // XP 门槛 → 称号（呼应曙光号色彩等级：灰→红→蓝→金）
+  {min:0,    name:'灰阶学徒'},
+  {min:120,  name:'表面分类员'},
+  {min:260,  name:'红序语义工程师'},
+  {min:430,  name:'Building Creator'},
+  {min:620,  name:'损耗结构师'},
+  {min:820,  name:'有机侵入设计师'},
+  {min:1050, name:'跨引擎管线师'},
+  {min:1350, name:'蓝序 Environment TA'},
+];
+
+const XP_PER_LOG = 15;
+// 额外成就 XP 现在由 AI 评分决定，以下为 fallback 固定值
+const XP_ACH_HIGH = 40;  // 高相关
+const XP_ACH_MID  = 20;  // 中相关
+const XP_ACH_LOW  = 10;  // 低相关
+const XP_PER_ACH  = 20;  // fallback（无 AI 时）
+
+// ===== 每个周任务对应的推荐教程 (mid_wkIndex → 教程列表) =====
+const LEGACY_TUTORIALS = {
+  'm1_0':[
+    {type:'yt',  label:'Ben Cloward PCG Ep1 - Introduction', url:'https://www.youtube.com/@BenCloward'},
+    {type:'yt',  label:'Ben Cloward PCG Ep2 - Surface Sampler', url:'https://www.youtube.com/@BenCloward'},
+    {type:'doc', label:'UE 官方 PCG 概览', url:'https://dev.epicgames.com/documentation/en-us/unreal-engine/procedural-content-generation-overview'},
+    {type:'bili',label:'B 站搜：UE5 PCG 入门 数据流', url:'https://search.bilibili.com/all?keyword=UE5+PCG+%E5%85%A5%E9%97%A8'},
+  ],
+  'm1_1':[
+    {type:'doc', label:'无特定视频——这周要自己写文档（规则设计是方法论）', url:''},
+    {type:'doc', label:'PCG 概念参考：Epic Dev Community', url:'https://dev.epicgames.com/community/search?q=PCG+procedural+rule'},
+  ],
+  'm1_2':[
+    {type:'doc', label:'UE 资产命名规范 Community Guide', url:'https://dev.epicgames.com/documentation/en-us/unreal-engine/recommended-asset-naming-conventions-in-unreal-engine-projects'},
+    {type:'bili',label:'B 站搜：UE5 资产规范 Pivot 碰撞', url:'https://search.bilibili.com/all?keyword=UE5+%E8%B5%84%E4%BA%A7%E8%A7%84%E8%8C%83+Pivot'},
+  ],
+  'm1_3':[
+    {type:'yt',  label:'Environment Art Blockout Tips - GDC talks', url:'https://www.youtube.com/results?search_query=environment+art+blockout+unreal+engine'},
+    {type:'bili',label:'B 站搜：UE5 灰盒 场景构图 环境美术', url:'https://search.bilibili.com/all?keyword=UE5+%E7%81%B0%E7%9B%92+%E5%9C%BA%E6%99%AF%E6%9E%84%E5%9B%BE'},
+  ],
+  'm2_0':[
+    {type:'yt',  label:'Ben Cloward PCG Ep3 - Landscape Grass Masks', url:'https://www.youtube.com/@BenCloward'},
+    {type:'doc', label:'UE PCG Filter Nodes 文档', url:'https://dev.epicgames.com/documentation/en-us/unreal-engine/procedural-content-generation-overview'},
+    {type:'bili',label:'B 站搜：UE5 PCG 坡度过滤 散布', url:'https://search.bilibili.com/all?keyword=UE5+PCG+%E5%9D%A1%E5%BA%A6%E8%BF%87%E6%BB%A4'},
+  ],
+  'm2_1':[
+    {type:'yt',  label:'Ben Cloward PCG - Density & Noise', url:'https://www.youtube.com/@BenCloward'},
+    {type:'doc', label:'PCG Point Ops / Self Pruning 文档', url:'https://dev.epicgames.com/documentation/en-us/unreal-engine/procedural-content-generation-overview'},
+  ],
+  'm2_2':[
+    {type:'yt',  label:'Ben Cloward PCG - Spline Distribution (Fences)', url:'https://www.youtube.com/@BenCloward'},
+    {type:'doc', label:'PCG Spline Sampler 文档', url:'https://dev.epicgames.com/documentation/en-us/unreal-engine/procedural-content-generation-overview'},
+    {type:'bili',label:'B 站搜：UE5 PCG Spline 道路', url:'https://search.bilibili.com/all?keyword=UE5+PCG+Spline+%E9%81%93%E8%B7%AF'},
+  ],
+  'm2_3':[
+    {type:'yt',  label:'Ben Cloward PCG - Subgraph & Debug', url:'https://www.youtube.com/@BenCloward'},
+    {type:'doc', label:'PCG Debug / Data View 文档', url:'https://dev.epicgames.com/documentation/en-us/unreal-engine/procedural-content-generation-overview'},
+  ],
+  'm3_0':[
+    {type:'doc', label:'官方 PCG Biome Core 快速上手（中文）', url:'https://dev.epicgames.com/documentation/zh-cn/unreal-engine/procedural-content-generation-pcg-biome-core-and-sample-plugins-quick-start-guide-in-unreal-engine'},
+    {type:'yt',  label:'Epic PCG Biome Core Overview Video', url:'https://www.youtube.com/results?search_query=UE5+PCG+Biome+Core+tutorial'},
+    {type:'bili',label:'B 站搜：UE5 PCG Biome 生态', url:'https://search.bilibili.com/all?keyword=UE5+PCG+Biome+%E7%94%9F%E6%80%81'},
+  ],
+  'm3_1':[
+    {type:'doc', label:'PCG Biome Core - Priority & Transitions 文档', url:'https://dev.epicgames.com/documentation/en-us/unreal-engine/procedural-content-generation-pcg-biome-core-and-sample-plugins-quick-start-guide-in-unreal-engine'},
+    {type:'bili',label:'B 站搜：UE5 PCG 生物群系 多因子', url:'https://search.bilibili.com/all?keyword=UE5+PCG+%E7%94%9F%E7%89%A9%E7%BE%A4%E7%B3%BB'},
+  ],
+  'm3_2':[
+    {type:'yt',  label:'Ben Cloward - Landscape Material Slope/Height', url:'https://www.youtube.com/@BenCloward'},
+    {type:'bili',label:'B 站搜：UE5 地形材质 坡度 世界对齐', url:'https://search.bilibili.com/all?keyword=UE5+%E5%9C%B0%E5%BD%A2%E6%9D%90%E8%B4%A8+%E5%9D%A1%E5%BA%A6%E6%B7%B7%E5%90%88'},
+  ],
+  'm3_3':[
+    {type:'doc', label:'UE5 Runtime Virtual Texture 官方文档', url:'https://dev.epicgames.com/documentation/en-us/unreal-engine/runtime-virtual-texturing-in-unreal-engine'},
+    {type:'bili',label:'B 站搜：UE5 RVT 运行时虚拟纹理 地面融合', url:'https://search.bilibili.com/all?keyword=UE5+RVT+%E8%99%9A%E6%8B%9F%E7%BA%B9%E7%90%86'},
+  ],
+  'm4_0':[
+    {type:'bili',label:'B 站搜：Houdini 入门 SOP 属性 VEX', url:'https://search.bilibili.com/all?keyword=Houdini+%E5%85%A5%E9%97%A8+SOP+%E5%B1%9E%E6%80%A7'},
+    {type:'yt',  label:'SideFX - Houdini for Beginners', url:'https://www.youtube.com/results?search_query=Houdini+for+beginners+SOP+attributes'},
+  ],
+  'm4_1':[
+    {type:'bili',label:'B 站搜：Houdini HeightField 地形 入门', url:'https://search.bilibili.com/all?keyword=Houdini+HeightField+%E5%9C%B0%E5%BD%A2'},
+    {type:'doc', label:'SideFX HeightField 官方文档', url:'https://www.sidefx.com/docs/houdini/nodes/sop/heightfield.html'},
+    {type:'yt',  label:'Houdini Terrain / HeightField Tutorial', url:'https://www.youtube.com/results?search_query=Houdini+heightfield+terrain+tutorial'},
+  ],
+  'm4_2':[
+    {type:'bili',label:'B 站搜：Houdini 侵蚀 Erosion 地形数据', url:'https://search.bilibili.com/all?keyword=Houdini+Erosion+%E4%BE%B5%E8%9A%80+%E5%9C%B0%E5%BD%A2'},
+    {type:'yt',  label:'Houdini Erosion & Terrain Masks', url:'https://www.youtube.com/results?search_query=Houdini+erosion+terrain+mask+tutorial'},
+  ],
+  'm4_3':[
+    {type:'bili',label:'B 站搜：Houdini HDA 参数 UE5 地形管线', url:'https://search.bilibili.com/all?keyword=Houdini+HDA+UE5+%E5%9C%B0%E5%BD%A2'},
+    {type:'yt',  label:'Houdini + UE5 Terrain Pipeline', url:'https://www.youtube.com/results?search_query=Houdini+UE5+terrain+pipeline+HDA'},
+  ],
+  'm5_0':[
+    {type:'doc', label:'Houdini Engine for Unreal 官方文档', url:'https://www.sidefx.com/docs/unreal/'},
+    {type:'bili',label:'B 站搜：Houdini Engine UE5 地形导入', url:'https://search.bilibili.com/all?keyword=Houdini+Engine+UE5+%E5%9C%B0%E5%BD%A2%E5%AF%BC%E5%85%A5'},
+  ],
+  'm5_1':[
+    {type:'yt',  label:'Houdini → UE PCG Point Cloud Pipeline', url:'https://www.youtube.com/results?search_query=Houdini+Unreal+PCG+pipeline+point+cloud'},
+    {type:'bili',label:'B 站搜：Houdini UE5 程序化管线 点云', url:'https://search.bilibili.com/all?keyword=Houdini+UE5+%E7%A8%8B%E5%BA%8F%E5%8C%96%E7%AE%A1%E7%BA%BF'},
+  ],
+  'm5_2':[
+    {type:'doc', label:'UE Editor Scripting Python 官方文档', url:'https://dev.epicgames.com/documentation/en-us/unreal-engine/scripting-the-unreal-editor-using-python'},
+    {type:'bili',label:'B 站搜：UE5 Python 批量导入 脚本', url:'https://search.bilibili.com/all?keyword=UE5+Python+%E6%89%B9%E9%87%8F%E5%AF%BC%E5%85%A5+%E8%84%9A%E6%9C%AC'},
+  ],
+  'm5_3':[
+    {type:'doc', label:'UE Editor Utility Widget 文档', url:'https://dev.epicgames.com/documentation/en-us/unreal-engine/editor-utility-widgets-in-unreal-engine'},
+    {type:'bili',label:'B 站搜：UE5 Editor Utility Widget 工具开发', url:'https://search.bilibili.com/all?keyword=UE5+Editor+Utility+Widget'},
+  ],
+  'm6_0':[
+    {type:'doc', label:'UE World Partition 官方文档', url:'https://dev.epicgames.com/documentation/en-us/unreal-engine/world-partition-in-unreal-engine'},
+    {type:'doc', label:'PCG Partition 文档', url:'https://dev.epicgames.com/documentation/en-us/unreal-engine/procedural-content-generation-overview'},
+    {type:'bili',label:'B 站搜：UE5 World Partition HLOD 大世界', url:'https://search.bilibili.com/all?keyword=UE5+World+Partition+HLOD'},
+  ],
+  'm6_1':[
+    {type:'doc', label:'Unreal Insights 性能分析工具文档', url:'https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-insights-in-unreal-engine'},
+    {type:'bili',label:'B 站搜：UE5 性能优化 DrawCall 分析', url:'https://search.bilibili.com/all?keyword=UE5+%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96+DrawCall'},
+  ],
+  'm6_2':[
+    {type:'yt',  label:'Level Design - Navigation & Traversal', url:'https://www.youtube.com/results?search_query=game+level+design+traversal+environment'},
+    {type:'bili',label:'B 站搜：UE5 关卡设计 通行体验 路径', url:'https://search.bilibili.com/all?keyword=UE5+%E5%85%B3%E5%8D%A1%E8%AE%BE%E8%AE%A1+%E9%80%9A%E8%A1%8C'},
+  ],
+  'm6_3':[
+    {type:'doc', label:'PCG Include / Exclude / Override 文档', url:'https://dev.epicgames.com/documentation/en-us/unreal-engine/procedural-content-generation-overview'},
+    {type:'yt',  label:'Hero Area Manual Composition in Open World', url:'https://www.youtube.com/results?search_query=unreal+engine+open+world+hero+area+manual+placement'},
+  ],
+  'm7_0':[
+    {type:'bili',label:'B 站搜：UE5 大气 后期 光照 环境美术', url:'https://search.bilibili.com/all?keyword=UE5+%E5%A4%A7%E6%B0%94+%E5%90%8E%E6%9C%9F+%E5%85%89%E7%85%A7'},
+    {type:'yt',  label:'UE5 Lighting & Atmosphere for Environment Art', url:'https://www.youtube.com/results?search_query=UE5+lighting+atmosphere+environment+art'},
+  ],
+  'm7_1':[
+    {type:'doc', label:'UE5 性能优化指南', url:'https://dev.epicgames.com/documentation/en-us/unreal-engine/optimization-guidelines-for-unreal-engine'},
+    {type:'bili',label:'B 站搜：UE5 性能优化 前后对比', url:'https://search.bilibili.com/all?keyword=UE5+%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96+%E5%89%8D%E5%90%8E%E5%AF%B9%E6%AF%94'},
+  ],
+  'm7_2':[
+    {type:'yt',  label:'UE5 Cinematic Sequence & Camera', url:'https://www.youtube.com/results?search_query=UE5+Sequencer+cinematic+tutorial'},
+    {type:'bili',label:'B 站搜：UE5 Sequencer 过场动画 录制', url:'https://search.bilibili.com/all?keyword=UE5+Sequencer+%E8%BF%87%E5%9C%BA%E5%8A%A8%E7%94%BB'},
+  ],
+  'm7_3':[
+    {type:'yt',  label:'ArtStation / Portfolio Presentation Tips for TA', url:'https://www.youtube.com/results?search_query=technical+artist+portfolio+presentation'},
+    {type:'bili',label:'B 站搜：游戏作品集 技术美术 展示', url:'https://search.bilibili.com/all?keyword=%E6%B8%B8%E6%88%8F%E4%BD%9C%E5%93%81%E9%9B%86+%E6%8A%80%E6%9C%AF%E7%BE%8E%E6%9C%AF'},
+  ],
+};
+
+const TUTORIALS = {
+  'm1_0':[
+    {type:'doc',label:'SideFX · Houdini Foundations',url:'https://www.sidefx.com/learn/getting_started/'},
+    {type:'bili',label:'B 站搜：Houdini SOP Attribute 入门',url:'https://search.bilibili.com/all?keyword=Houdini+SOP+Attribute+%E5%85%A5%E9%97%A8'}
+  ],
+  'm1_1':[
+    {type:'doc',label:'SideFX · VEX 语言参考',url:'https://www.sidefx.com/docs/houdini/vex/'},
+    {type:'bili',label:'B 站搜：Houdini VEX dot cross',url:'https://search.bilibili.com/all?keyword=Houdini+VEX+dot+cross'}
+  ],
+  'm1_2':[{type:'doc',label:'SideFX · Project Skylark Building Generator',url:'https://www.sidefx.com/tutorials/project-skylark-building-generator/'}],
+  'm1_3':[{type:'doc',label:'SideFX · Digital Assets / HDA',url:'https://www.sidefx.com/docs/houdini/assets/'}],
+  'm2_0':[{type:'doc',label:'SideFX · Houdini Digital Assets',url:'https://www.sidefx.com/docs/houdini/assets/'}],
+  'm2_1':[{type:'doc',label:'SideFX · Boolean SOP',url:'https://www.sidefx.com/docs/houdini/nodes/sop/boolean.html'}],
+  'm2_2':[{type:'doc',label:'SideFX · Measure / Curvature',url:'https://www.sidefx.com/docs/houdini/nodes/sop/measure.html'}],
+  'm2_3':[{type:'doc',label:'SideFX · Houdini Engine for Unreal',url:'https://www.sidefx.com/docs/houdini/unreal/'}],
+  'm3_0':[{type:'doc',label:'SideFX · xyzdist / primuv',url:'https://www.sidefx.com/docs/houdini/vex/functions/xyzdist.html'}],
+  'm3_1':[{type:'bili',label:'B 站搜：Houdini procedural vines',url:'https://search.bilibili.com/all?keyword=Houdini+procedural+vines'}],
+  'm3_2':[{type:'doc',label:'SideFX · Houdini Engine for Unreal',url:'https://www.sidefx.com/docs/houdini/unreal/'}],
+  'm3_3':[{type:'doc',label:'Epic · PCG 概览',url:'https://dev.epicgames.com/documentation/zh-cn/unreal-engine/procedural-content-generation-overview'}],
+  'm35_0':[{type:'doc',label:'Epic · Unreal Insights',url:'https://dev.epicgames.com/documentation/zh-cn/unreal-engine/unreal-insights-in-unreal-engine'}],
+  'm35_1':[{type:'yt',label:'Technical Artist Portfolio Presentation',url:'https://www.youtube.com/results?search_query=technical+artist+portfolio+presentation'}]
+};
+
+/* ================= STATE ================= */
+const LS_KEY = 'aurora_environment_ta_tracker_v1';
+let state = load();
+
+const HABITS = [
+  {id:'hands', ico:'🛠️', title:'动手实操',     sub:'在 Houdini / UE 里做'},
+  {id:'capture', ico:'🎥', title:'录制进度',    sub:'30–90 秒可验证结果'},
+  {id:'version', ico:'◫', title:'版本保存',     sub:'可回退、可对比'},
+  {id:'scope', ico:'✂️', title:'守住范围',      sub:'没有重新发散世界观'},
+];
+
+const CARD_CATS = ['Building','Damage','Growth','Houdini','Unreal','材质','其他'];
+
+function defaultState(){
+  return {
+    done:{}, logs:[], achievements:[], curMonth:'m1', firstDay:null,
+    startDate:null,   // 计划开始日期 YYYY-MM-DD
+    habits:{},        // { "2026-07-22": {watch:true, hands:false, ...} }
+    weekReviews:[],   // [ {week:'2026-W30', text:'AI生成的回顾', logs:[...], date:'...'} ]
+    cardCat:{},       // { achId: '分类字符串' }
+    api:{preset:'deepseek',base:'',model:'',key:''}
+  };
+}
+function load(){
+  try{ const s = JSON.parse(localStorage.getItem(LS_KEY)); return s && s.done ? Object.assign(defaultState(), s) : defaultState(); }
+  catch(e){ return defaultState(); }
+}
+function save(){ localStorage.setItem(LS_KEY, JSON.stringify(state)); }
+
+/* ================= XP / RANK ================= */
+function taskXP(){ let x=0; PLAN.forEach(m=>m.weeks.forEach((wk,i)=>{ if(state.done[m.id+'_'+i]) x+=wk.xp; })); return x; }
+function achXP(){ return state.achievements.reduce((s,a)=>s+(a.xp||XP_PER_ACH),0); }
+function totalXP(){ return taskXP() + state.logs.length*XP_PER_LOG + achXP(); }
+function rankFor(xp){ let r=RANKS[0],lv=1; for(let i=0;i<RANKS.length;i++){ if(xp>=RANKS[i].min){ r=RANKS[i]; lv=i+1; } } 
+  const next = RANKS[lv] || null; return {rank:r,lv,next}; }
+
+/* ================= HELPERS ================= */
+function todayStr(){ return new Date().toLocaleDateString('zh-CN',{year:'numeric',month:'2-digit',day:'2-digit'}); }
+function isoToday(){ return new Date().toISOString().slice(0,10); }
+function weekLabel(date){ // returns "2026-W30"
+  const d=new Date(date); d.setHours(12);
+  const jan1=new Date(d.getFullYear(),0,1);
+  const wk=Math.ceil(((d-jan1)/86400000+jan1.getDay()+1)/7);
+  return d.getFullYear()+'-W'+String(wk).padStart(2,'0');
+}
+function currentWeekLabel(){ return weekLabel(new Date()); }
+
+/* ================= RENDER ================= */
+function monthProgress(mid){ const m=PLAN.find(x=>x.id===mid); let d=0; m.weeks.forEach((wk,i)=>{ if(state.done[mid+'_'+i]) d++; }); return {done:d,total:m.weeks.length,pct:Math.round(d/m.weeks.length*100)}; }
+function totalProgress(){ let d=0,t=0; PLAN.forEach(m=>m.weeks.forEach((wk,i)=>{ t++; if(state.done[m.id+'_'+i]) d++; })); return {done:d,total:t,pct:Math.round(d/t*100)}; }
+
+let prevLv = rankFor(totalXP()).lv;
+
+function render(){
+  const xp = totalXP();
+  const {rank,lv,next} = rankFor(xp);
+  // level card
+  document.getElementById('lvNum').textContent = lv;
+  document.getElementById('rankName').textContent = rank.name;
+  if(next){
+    const span = next.min - rank.min, into = xp - rank.min;
+    document.getElementById('xpLine').textContent = `经验 ${xp} XP · 距「${next.name}」还差 ${next.min-xp} XP`;
+    document.getElementById('xpFill').style.width = Math.min(100, into/span*100)+'%';
+  } else {
+    document.getElementById('xpLine').textContent = `经验 ${xp} XP · 已达最高称号 🏆`;
+    document.getElementById('xpFill').style.width = '100%';
+  }
+  // streak / days
+  document.getElementById('streakV').textContent = calcStreak();
+  document.getElementById('daysV').textContent = uniqueDays();
+  // total bar
+  const tp = totalProgress();
+  document.getElementById('totalPct').textContent = tp.pct+'%';
+  document.getElementById('totalFill').style.width = tp.pct+'%';
+  document.getElementById('totalSub').textContent = `共 ${tp.total} 周任务 · 已完成 ${tp.done} 项`;
+  // month mini bars
+  const mm = document.getElementById('monthMini'); mm.innerHTML='';
+  PLAN.forEach(m=>{
+    const p = monthProgress(m.id);
+    const el = document.createElement('div');
+    el.className = 'mm' + (m.id===state.curMonth?' active':'') + (p.pct===100?' done':'');
+    el.innerHTML = `<div class="check">✓</div><div class="mlabel">${m.label}</div><div class="mname">${m.name}</div>
+      <div class="mtrack"><div class="mfill" style="width:${p.pct}%"></div></div><div class="mpct">${p.pct}%</div>`;
+    el.onclick = ()=>{ state.curMonth=m.id; save(); render(); };
+    mm.appendChild(el);
+  });
+  // current month bar
+  const cur = PLAN.find(x=>x.id===state.curMonth);
+  const cp = monthProgress(state.curMonth);
+  document.getElementById('curMonthName').textContent = cur.label+' '+cur.name;
+  document.getElementById('monthPct').textContent = cp.pct+'%';
+  document.getElementById('monthFill').style.width = cp.pct+'%';
+  // achievements bar
+  const achN = state.achievements.length;
+  const achLv = Math.floor(achN/10);
+  document.getElementById('achPct').textContent = 'Lv.'+achLv;
+  document.getElementById('achFill').style.width = (achN%10)/10*100+'%';
+  document.getElementById('achSub').textContent = `已记 ${achN} 条计划外收获 · 距下一档还差 ${10-(achN%10)} 条`;
+  // task area
+  renderTasks(cur);
+  renderLogs();
+  renderAch();
+  // ai status
+  const ok = state.api.key && state.api.base && state.api.model;
+  document.getElementById('aiStatus').textContent = ok ? 'AI 已就绪' : '未配置';
+  document.getElementById('aiStatus').style.color = ok ? 'var(--green)' : 'var(--sub)';
+  // today pill
+  document.getElementById('todayPill').textContent = new Date().toLocaleDateString('zh-CN',{month:'2-digit',day:'2-digit'});
+  // level up detection
+  if(lv>prevLv){ showLevelUp(rank.name); prevLv=lv; } else { prevLv=lv; }
+  // sub-renders
+  renderCountdown();
+  renderHabits();
+  renderCardLibrary();
+  renderReviewDrawer();
+}
+
+function renderTasks(m){
+  document.getElementById('taskMonthTitle').textContent = m.label+' · '+m.name;
+  const p = monthProgress(m.id);
+  document.getElementById('taskCount').textContent = `${p.done} / ${p.total}`;
+  const area = document.getElementById('taskArea'); area.innerHTML='';
+  m.weeks.forEach((wk,i)=>{
+    const key = m.id+'_'+i;
+    const tutKey = m.id+'_'+i;
+    const done = !!state.done[key];
+    const tuts = TUTORIALS[tutKey] || [];
+    const g = document.createElement('div'); g.className='wk-group';
+    g.innerHTML = `<div class="wk-title">${wk.w}${wk.milestone?' <span class="star">⭐ 里程碑</span>':''}</div>`;
+
+    // task row (checkbox only — not the tutorial toggle)
+    const t = document.createElement('div');
+    t.className = 'task'+(done?' done':'')+(wk.milestone?' milestone star':'');
+    t.innerHTML = `<div class="box">✓</div><div class="tx">${wk.t}</div><div class="xp">+${wk.xp}</div>`;
+    t.onclick = (e)=>{
+      if(e.target.closest('.tut-toggle')||e.target.closest('.tut-links')) return;
+      state.done[key] = !state.done[key]; save();
+      if(state.done[key]){
+        toast(wk.milestone?`🎖️ 里程碑达成！+${wk.xp} XP`:`✓ 完成！+${wk.xp} XP`, wk.milestone?'gold':'');
+        if(monthProgress(m.id).pct===100) setTimeout(()=>toast(`🏔️ ${m.label} ${m.name} 全部完成！`,'gold'),700);
+      }
+      render();
+    };
+
+    // tutorial links section
+    if(tuts.length){
+      const typeLabel = {yt:'▶ YouTube', doc:'📄 文档', bili:'📺 B 站'};
+      const toggle = document.createElement('div');
+      toggle.className = 'tut-toggle';
+      toggle.innerHTML = `<span class="arr">▶</span> 推荐教程（${tuts.length} 条）`;
+      const linksDiv = document.createElement('div');
+      linksDiv.className = 'tut-links';
+      tuts.forEach(tut=>{
+        const tag = document.createElement('span');
+        tag.className = 'tut-tag '+tut.type;
+        if(tut.url){
+          tag.innerHTML = `${typeLabel[tut.type]||tut.type} <a href="${tut.url}" target="_blank" rel="noopener">${tut.label}</a>`;
+        } else {
+          tag.textContent = tut.label;
+        }
+        linksDiv.appendChild(tag);
+      });
+      toggle.onclick = (e)=>{ e.stopPropagation();
+        toggle.classList.toggle('open'); linksDiv.classList.toggle('open'); };
+      t.appendChild(toggle);
+      t.appendChild(linksDiv);
+    }
+
+    g.appendChild(t); area.appendChild(g);
+  });
+}
+
+function renderLogs(){
+  const list = document.getElementById('logList'); list.innerHTML='';
+  if(!state.logs.length){ list.innerHTML='<div class="empty">还没有日志。今天做了什么，写一条吧 ✍️</div>'; return; }
+  [...state.logs].reverse().forEach((lg)=>{
+    const el = document.createElement('div'); el.className='log-item';
+    el.innerHTML = `<div class="date">📅 ${lg.date}${lg.bonus?' <span class="bonus">+计划外</span>':''}</div>
+      <div class="body">${escapeHtml(lg.text)}</div><span class="del" data-id="${lg.id}">✕</span>`;
+    el.querySelector('.del').onclick = ()=>{ state.logs = state.logs.filter(x=>x.id!==lg.id); save(); render(); toast('已删除日志'); };
+    list.appendChild(el);
+  });
+}
+
+function renderAch(){
+  const list = document.getElementById('achList'); list.innerHTML='';
+  if(!state.achievements.length){ list.innerHTML='<div class="empty">计划外学到的每一招，都记在这 🏅</div>'; return; }
+  const medals=['🥉','🥈','🥇','🏆','💎'];
+  [...state.achievements].reverse().forEach((a)=>{
+    const xp = a.xp || XP_PER_ACH;
+    const badgeCls = xp>=35?'high':xp>=18?'mid':'low';
+    const el = document.createElement('div'); el.className='ach-item';
+    el.innerHTML = `<span class="medal">${a.pending ? '⏳' : medals[Math.min(medals.length-1,Math.floor((state.achievements.length-1)/10))]}</span>
+      <div class="txt">${escapeHtml(a.text)}
+        <div class="d">
+          ${a.date}
+          ${a.pending ? '<span class="xp-badge low">AI 评分中…</span>' : `<span class="xp-badge ${badgeCls}">+${xp} XP${xp>=35?' ★★':xp>=18?' ★':''}</span>`}
+        </div>
+        ${a.evalNote ? `<div class="ai-eval">✦ ${escapeHtml(a.evalNote)}</div>` : ''}
+      </div>
+      <span class="del" data-id="${a.id}">✕</span>`;
+    el.querySelector('.del').onclick = ()=>{ state.achievements = state.achievements.filter(x=>x.id!==a.id); save(); render(); toast('已删除成就'); };
+    list.appendChild(el);
+  });
+}
+
+/* ================= COUNTDOWN ================= */
+function renderCountdown(){
+  const bar = document.getElementById('countdownBar');
+  const cdDays = document.getElementById('cdDays');
+  const cdTitle = document.getElementById('cdTitle');
+  const cdSub = document.getElementById('cdSub');
+  const cdPace = document.getElementById('cdPace');
+  if(!state.startDate){
+    cdDays.textContent='—'; cdDays.className='cd-day ok';
+    cdTitle.textContent='设置开始日期'; cdSub.textContent='点右侧按钮开始计时';
+    cdPace.innerHTML=''; return;
+  }
+  const start = new Date(state.startDate+'T00:00:00');
+  const end   = new Date(start); end.setDate(end.getDate()+98);
+  const now   = new Date(); now.setHours(0,0,0,0);
+  const totalDays = Math.round((end-start)/86400000);
+  const elapsed   = Math.max(0,Math.round((now-start)/86400000));
+  const remain    = Math.max(0,Math.round((end-now)/86400000));
+  // expected progress based on days elapsed
+  const expectedPct = Math.min(100, elapsed/totalDays*100);
+  const actualPct   = totalProgress().pct;
+  const diff        = actualPct - expectedPct;
+  const cls = remain<=14?'over':remain<=30?'warn':'ok';
+  cdDays.textContent = remain; cdDays.className='cd-day '+cls;
+  cdTitle.textContent = remain>0 ? `计划第 ${elapsed+1} 天 · 距结束还差 ${remain} 天` : '计划已到期！';
+  // pace indicator
+  const paceLabel = diff>=5?'🚀 超前':diff>=-5?'✓ 正常':'⚠ 落后';
+  const paceCls   = diff>=5?'ok':diff>=-5?'ok':'late';
+  const endDateStr = end.toLocaleDateString('zh-CN',{month:'2-digit',day:'2-digit'});
+  cdSub.textContent = `截止 ${endDateStr} · 应完成 ${Math.round(expectedPct)}%`;
+  cdPace.innerHTML = `
+    <div class="cd-stat"><div class="v ${paceCls}">${paceLabel}</div><div class="k">进度节奏</div></div>
+    <div class="cd-stat"><div class="v" style="color:var(--accent2)">${Math.round(actualPct)}%</div><div class="k">实际进度</div></div>
+    <div class="cd-stat"><div class="v" style="color:var(--sub)">${Math.round(expectedPct)}%</div><div class="k">应达进度</div></div>
+    <div class="cd-stat"><div class="v ${diff>=0?'ok':'late'}">${diff>=0?'+':''}${Math.round(diff)}%</div><div class="k">偏差</div></div>`;
+}
+
+/* ================= HABITS ================= */
+function renderHabits(){
+  const today = isoToday();
+  const dayHabits = state.habits[today] || {};
+  document.getElementById('habitDateLabel').innerHTML = `今日习惯打卡 <b>${new Date().toLocaleDateString('zh-CN',{month:'2-digit',day:'2-digit'})}</b>`;
+  const row = document.getElementById('habitsRow'); row.innerHTML='';
+  HABITS.forEach(h=>{
+    const done = !!dayHabits[h.id];
+    const btn = document.createElement('div');
+    btn.className='habit-btn'+(done?' done':'');
+    btn.innerHTML=`<div class="hico">${h.ico}</div><div class="htitle">${h.title}</div><div class="hsub">${h.sub}</div>`;
+    btn.onclick=()=>{
+      if(!state.habits[today]) state.habits[today]={};
+      state.habits[today][h.id] = !state.habits[today][h.id];
+      save(); renderHabits();
+      if(state.habits[today][h.id]){
+        const allDone = HABITS.every(hh=>state.habits[today][hh.id]);
+        if(allDone) setTimeout(()=>toast('🔥 今日全勤！所有习惯完成！','gold'),200);
+        else toast(`${h.ico} ${h.title} ✓`);
+      }
+    };
+    row.appendChild(btn);
+  });
+}
+
+/* ================= CARD LIBRARY ================= */
+let activeCatFilter = 'all';
+function renderCardLibrary(){
+  const lib = document.getElementById('cardLibrary');
+  const total = state.achievements.length;
+  document.getElementById('cardTotal').textContent = total+' 张';
+  // filter buttons
+  const filterEl = document.getElementById('cardFilter');
+  const cats = ['all',...CARD_CATS];
+  filterEl.innerHTML='';
+  cats.forEach(cat=>{
+    const btn=document.createElement('button');
+    btn.className='filter-btn'+(activeCatFilter===cat?' active':'');
+    const cnt = cat==='all'? total : state.achievements.filter(a=>(state.cardCat[a.id]||'其他')===cat).length;
+    btn.textContent=(cat==='all'?'全部':cat)+(cnt>0?` (${cnt})`:'');
+    btn.onclick=()=>{ activeCatFilter=cat; renderCardLibrary(); };
+    filterEl.appendChild(btn);
+  });
+  // cards
+  const grid=document.getElementById('cardGrid'); grid.innerHTML='';
+  const medals=['🥉','🥈','🥇','🏆','💎'];
+  const filtered = state.achievements.filter(a=>activeCatFilter==='all'||(state.cardCat[a.id]||'其他')===activeCatFilter);
+  if(!filtered.length){ grid.innerHTML='<div class="empty" style="grid-column:1/-1">'+( total>0?`当前分类暂无卡片`:`还没有额外收获。学了计划外的东西就记进来吧 🌟`)+'</div>'; return; }
+  const catColors={'Building':'#76a7e8','Damage':'#ee5a4f','Growth':'#3fd48a','Houdini':'#ffd97a','Unreal':'#4d8dff','材质':'#b57cff','其他':'#5c6883'};
+  [...filtered].reverse().forEach(a=>{
+    const cat = state.cardCat[a.id]||'其他';
+    const xp = a.xp||XP_PER_ACH;
+    const badgeCls=xp>=35?'high':xp>=18?'mid':'low';
+    const card=document.createElement('div');
+    card.className='kcard'; card.dataset.cat=cat;
+    card.innerHTML=`
+      <div class="kcat" style="color:${catColors[cat]||'#5c6883'}">${cat}</div>
+      <div class="ktxt">${escapeHtml(a.text)}</div>
+      <div class="kmeta">
+        <span style="color:var(--dim)">${a.date}</span>
+        <span class="kxp xp-badge ${badgeCls}">+${xp} XP</span>
+        ${a.evalNote?`<span style="color:var(--purple);font-size:10px">✦ ${escapeHtml(a.evalNote.slice(0,20)+(a.evalNote.length>20?'…':''))}</span>`:''}
+      </div>
+      <select class="cat-sel" style="position:absolute;bottom:10px;right:10px;background:var(--panel2);border:1px solid var(--line);border-radius:7px;color:var(--sub);font-size:10px;padding:2px 6px;cursor:pointer"></select>
+      <span class="kdel">✕</span>`;
+    const sel=card.querySelector('.cat-sel');
+    CARD_CATS.forEach(c=>{ const o=document.createElement('option'); o.value=c; o.textContent=c; if(c===cat) o.selected=true; sel.appendChild(o); });
+    sel.onchange=(e)=>{ state.cardCat[a.id]=e.target.value; save(); renderCardLibrary(); };
+    card.querySelector('.kdel').onclick=()=>{ state.achievements=state.achievements.filter(x=>x.id!==a.id); delete state.cardCat[a.id]; save(); render(); toast('已删除卡片'); };
+    grid.appendChild(card);
+  });
+}
+
+/* ================= WEEKLY REVIEW ================= */
+function renderReviewDrawer(){
+  const reviews = state.weekReviews||[];
+  document.getElementById('reviewCount').textContent = reviews.length+' 条';
+  const list=document.getElementById('weekList'); list.innerHTML='';
+  if(!reviews.length){ list.innerHTML='<div class="empty">还没有周回顾。点下方「生成本周回顾」让 AI 帮你总结这周收获。</div>'; return; }
+  [...reviews].reverse().forEach(r=>{
+    const el=document.createElement('div'); el.className='week-item';
+    el.innerHTML=`<div class="wdate">${r.week} · ${r.date}</div><div class="wsummary ${r.aiGenerated?'ai':''}">${escapeHtml(r.text)}</div>`;
+    list.appendChild(el);
+  });
+}
+
+/* ================= STREAK ================= */
+function uniqueDays(){ return new Set(state.logs.map(l=>l.date)).size; }
+function calcStreak(){
+  const days = [...new Set(state.logs.map(l=>l.date))].sort();
+  if(!days.length) return 0;
+  let streak=0; let d=new Date(); d.setHours(0,0,0,0);
+  const has = ds => days.includes(ds);
+  const fmt = dt => dt.toLocaleDateString('zh-CN',{year:'numeric',month:'2-digit',day:'2-digit'});
+  // if today not logged, start from yesterday
+  if(!has(fmt(d))) d.setDate(d.getDate()-1);
+  while(has(fmt(d))){ streak++; d.setDate(d.getDate()-1); }
+  return streak;
+}
+
+/* ================= ACTIONS ================= */
+document.getElementById('btnLog').onclick = ()=>{
+  const inp = document.getElementById('logInput'); const text = inp.value.trim();
+  if(!text){ toast('先写点内容吧 ✍️'); return; }
+  const date = new Date().toLocaleDateString('zh-CN',{year:'numeric',month:'2-digit',day:'2-digit'});
+  // 简单判断是否"计划外"：包含关键提示词或用户可后续手动加成就
+  state.logs.push({id:Date.now(),date,text,bonus:false});
+  inp.value=''; save(); render();
+  toast(`📖 已记录 +${XP_PER_LOG} XP`);
+};
+document.getElementById('logInput').addEventListener('keydown',e=>{ if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)) document.getElementById('btnLog').click(); });
+
+document.getElementById('btnAch').onclick = async ()=>{
+  const inp = document.getElementById('achInput'); const text = inp.value.trim();
+  if(!text){ toast('写一条计划外的收获吧 🏅'); return; }
+  const date = new Date().toLocaleDateString('zh-CN',{month:'2-digit',day:'2-digit'});
+  const id = Date.now();
+  const hasAI = state.api.key && state.api.base && state.api.model;
+  // 先以 pending 状态加进去（如果有 AI），否则直接固定分
+  const entry = {id, date, text, xp: hasAI ? XP_PER_ACH : XP_PER_ACH, pending: hasAI, evalNote:''};
+  state.achievements.push(entry);
+  inp.value=''; save(); render();
+  toast(`🏅 计划外成就已记录！${hasAI?'AI 评分中…':''}`, 'purple');
+  if(!hasAI) return;
+  // 调 AI 评分（后台静默，不占大 AI 面板）
+  try{
+    const {base,model,key}=state.api;
+    const sys=`你是资深 Environment TA / Houdini 技术美术导师。学习者正按 14 周「曙光号」计划推进 Building Creator、Semantic Data、Art-Directed Damage、Overgrowth、Houdini Engine、Unreal PCG 与作品集闭环。评估新记录的计划外收获，返回严格 JSON（不要 markdown 或多余文字）：{"xp":数字,"note":"一句话评语（≤25字，中文）"}。xp规则：40=直接强化主线，20=周边支撑，10=泛用但有限。`;
+    const user=`学习者新记录的计划外收获：「${text}」`;
+    const res=await fetch(base,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
+      body:JSON.stringify({model,temperature:0.3,messages:[{role:'system',content:sys},{role:'user',content:user}]})});
+    if(res.ok){
+      const data=await res.json();
+      const raw=data.choices?.[0]?.message?.content||'';
+      let parsed=null;
+      try{ parsed=JSON.parse(raw.replace(/```[a-z]*\n?/g,'').replace(/```/g,'').trim()); }catch(e){}
+      const idx=state.achievements.findIndex(a=>a.id===id);
+      if(idx>=0 && parsed && typeof parsed.xp==='number'){
+        const oldXP=state.achievements[idx].xp;
+        state.achievements[idx].xp=parsed.xp;
+        state.achievements[idx].evalNote=parsed.note||'';
+        state.achievements[idx].pending=false;
+        save(); render();
+        const diff=parsed.xp-oldXP;
+        const label=parsed.xp>=35?'🌟 高相关！':parsed.xp>=18?'✦ 中度相关':'◦ 低相关';
+        toast(`${label} 成就评分 +${parsed.xp} XP${diff>0?' (+'+diff+')':(diff<0?' ('+diff+')':', ')}`, parsed.xp>=35?'gold':'purple');
+      } else {
+        // AI 返回格式不对时 fallback
+        const idx2=state.achievements.findIndex(a=>a.id===id);
+        if(idx2>=0){ state.achievements[idx2].pending=false; save(); render(); }
+      }
+    } else {
+      const idx2=state.achievements.findIndex(a=>a.id===id);
+      if(idx2>=0){ state.achievements[idx2].pending=false; save(); render(); }
+    }
+  }catch(err){
+    const idx2=state.achievements.findIndex(a=>a.id===id);
+    if(idx2>=0){ state.achievements[idx2].pending=false; save(); render(); }
+  }
+  if(state.achievements.length%10===0) setTimeout(()=>toast(`🎖️ 额外成就升到 Lv.${state.achievements.length/10}！`,'gold'),700);
+};
+document.getElementById('achInput').addEventListener('keydown',e=>{ if(e.key==='Enter') document.getElementById('btnAch').click(); });
+
+/* ================= HABIT RESET ================= */
+document.getElementById('habitReset').onclick=()=>{
+  const today=isoToday();
+  if(state.habits[today]){ delete state.habits[today]; save(); renderHabits(); toast('已重置今日习惯'); }
+};
+
+/* ================= DATE MODAL ================= */
+const dateOverlay=document.getElementById('dateOverlay');
+document.getElementById('cdSetup').onclick=()=>{
+  document.getElementById('startDateInput').value=state.startDate||isoToday();
+  dateOverlay.classList.add('show');
+};
+document.getElementById('dateCancel').onclick=()=>dateOverlay.classList.remove('show');
+document.getElementById('dateSave').onclick=()=>{
+  const v=document.getElementById('startDateInput').value;
+  if(!v){ toast('请选择日期'); return; }
+  state.startDate=v; save(); render(); dateOverlay.classList.remove('show'); toast('📅 计划日期已设置');
+};
+dateOverlay.addEventListener('click',e=>{ if(e.target===dateOverlay) dateOverlay.classList.remove('show'); });
+
+/* ================= REVIEW DRAWER ================= */
+document.getElementById('reviewHead').onclick=()=>document.getElementById('reviewDrawer').classList.toggle('open');
+
+/* ================= MODALS ================= */
+const keyOverlay=document.getElementById('keyOverlay'), dataOverlay=document.getElementById('dataOverlay');
+document.getElementById('btnKey').onclick=()=>{ 
+  document.getElementById('apiPreset').value=state.api.preset||'deepseek';
+  document.getElementById('apiBase').value=state.api.base||'';
+  document.getElementById('apiModel').value=state.api.model||'';
+  document.getElementById('apiKey').value=state.api.key||'';
+  applyPreset(false); keyOverlay.classList.add('show'); 
+};
+document.getElementById('keyCancel').onclick=()=>keyOverlay.classList.remove('show');
+document.getElementById('apiPreset').onchange=()=>applyPreset(true);
+function applyPreset(overwrite){
+  const p=document.getElementById('apiPreset').value;
+  const presets={ deepseek:{base:'https://api.deepseek.com/v1/chat/completions',model:'deepseek-chat'},
+                  openai:{base:'https://api.openai.com/v1/chat/completions',model:'gpt-4o-mini'} };
+  if(p!=='custom' && (overwrite || !document.getElementById('apiBase').value)){
+    document.getElementById('apiBase').value=presets[p].base;
+    document.getElementById('apiModel').value=presets[p].model;
+  }
+}
+document.getElementById('keySave').onclick=()=>{
+  state.api={ preset:document.getElementById('apiPreset').value, base:document.getElementById('apiBase').value.trim(),
+              model:document.getElementById('apiModel').value.trim(), key:document.getElementById('apiKey').value.trim() };
+  save(); render(); keyOverlay.classList.remove('show'); toast('⚙ AI 设置已保存');
+};
+
+document.getElementById('btnData').onclick=()=>dataOverlay.classList.add('show');
+document.getElementById('dataClose').onclick=()=>dataOverlay.classList.remove('show');
+document.getElementById('btnExport').onclick=()=>{
+  const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download='曙光号_Environment_TA_打卡备份_'+new Date().toISOString().slice(0,10)+'.json'; a.click();
+  toast('⬇ 已导出备份');
+};
+document.getElementById('btnImport').onclick=()=>document.getElementById('importFile').click();
+document.getElementById('importFile').onchange=(e)=>{
+  const f=e.target.files[0]; if(!f)return; const r=new FileReader();
+  r.onload=()=>{ try{ const s=JSON.parse(r.result); state=Object.assign(defaultState(),s); save(); prevLv=rankFor(totalXP()).lv; render(); dataOverlay.classList.remove('show'); toast('⬆ 导入成功'); }
+    catch(err){ toast('导入失败：文件格式不对'); } };
+  r.readAsText(f);
+};
+document.getElementById('btnReset').onclick=()=>{
+  if(confirm('确定清空所有进度、日志和成就吗？此操作不可恢复（建议先导出备份）。')){
+    const api=state.api; state=defaultState(); state.api=api; save(); prevLv=1; render(); dataOverlay.classList.remove('show'); toast('已清空');
+  }
+};
+[keyOverlay,dataOverlay].forEach(o=>o.addEventListener('click',e=>{ if(e.target===o) o.classList.remove('show'); }));
+
+/* ================= AI ================= */
+function buildContext(){
+  const tp=totalProgress(); const xp=totalXP(); const {rank,lv}=rankFor(xp);
+  let lines=[];
+  lines.push(`学习者正在按 14 周计划完成「曙光号」Environment TA Vertical Slice。`);
+  lines.push(`当前等级 Lv.${lv}「${rank.name}」，总经验 ${xp} XP。总进度 ${tp.pct}%（${tp.done}/${tp.total} 周任务）。`);
+  lines.push(`连续打卡 ${calcStreak()} 天，累计打卡 ${uniqueDays()} 天。额外（计划外）成就 ${state.achievements.length} 条。`);
+  lines.push(`\n各月进度：`);
+  PLAN.forEach(m=>{ const p=monthProgress(m.id); lines.push(`- ${m.label} ${m.name}：${p.pct}%（${p.done}/${p.total}）`); });
+  lines.push(`\n当前聚焦阶段：${PLAN.find(x=>x.id===state.curMonth).label}。已完成的任务：`);
+  PLAN.forEach(m=>m.weeks.forEach((wk,i)=>{ if(state.done[m.id+'_'+i]) lines.push(`  [✓] ${m.label}${wk.w} ${wk.t}`); }));
+  const recentLogs=[...state.logs].slice(-8).reverse();
+  if(recentLogs.length){ lines.push(`\n最近日志：`); recentLogs.forEach(l=>lines.push(`  · ${l.date}：${l.text}`)); }
+  if(state.achievements.length){ lines.push(`\n计划外收获：`); state.achievements.slice(-8).forEach(a=>lines.push(`  · ${a.text}`)); }
+  return lines.join('\n');
+}
+
+async function callAI(systemPrompt, userPrompt){
+  const {base,model,key}=state.api;
+  if(!key||!base||!model){ keyOverlay.classList.add('show'); toast('请先配置 AI key ⚙'); return null; }
+  const out=document.getElementById('aiOut'); out.className='ai-out think'; out.textContent='AI 正在分析你的进度…';
+  try{
+    const res=await fetch(base,{ method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
+      body:JSON.stringify({ model, temperature:0.7, messages:[{role:'system',content:systemPrompt},{role:'user',content:userPrompt}] }) });
+    if(!res.ok){ const txt=await res.text(); out.className='ai-out'; out.textContent='❌ 请求失败（'+res.status+'）：\n'+txt.slice(0,300); return null; }
+    const data=await res.json();
+    const msg=data.choices?.[0]?.message?.content || '（AI 没有返回内容）';
+    out.className='ai-out'; out.textContent=msg; return msg;
+  }catch(err){ out.className='ai-out'; out.textContent='❌ 网络/接口错误：'+err.message+'\n\n提示：若接口有跨域(CORS)限制，纯网页可能无法直接调用，可换支持 CORS 的接口或中转。'; return null; }
+}
+
+document.getElementById('btnAiEval').onclick=()=>{
+  const sys=`你是一位资深 Environment TA 导师，专精 Houdini 程序化建模、HDA、Houdini Engine 与 Unreal PCG。学习者按 14 周「曙光号」计划完成 Building Creator → Damage → Overgrowth → Unreal → Portfolio。请基于进度做简洁务实的评估：一句话判断节奏；做得好的地方；当前风险，尤其 Scope Creep、语义数据或跨引擎落地；下周最重要的 2–3 件事。中文，300 字内。`;
+  callAI(sys, buildContext());
+};
+document.getElementById('btnAiPlan').onclick=()=>{
+  const sys=`你是资深 Environment TA / Houdini 导师。根据当前阶段与已完成情况，只为今天约 2 小时给出一个可立刻执行的小任务：1 个主任务、3–5 个步骤、明确完成标志，并提醒不要重新发散世界观。中文，200 字内。`;
+  callAI(sys, buildContext());
+};
+document.getElementById('btnAiWeek').onclick = async ()=>{
+  const wk = currentWeekLabel();
+  // 本周日志
+  const weekStart = new Date(); weekStart.setDate(weekStart.getDate()-weekStart.getDay()+1); weekStart.setHours(0,0,0,0);
+  const fmt = d=>d.toLocaleDateString('zh-CN',{year:'numeric',month:'2-digit',day:'2-digit'});
+  const weekLogs = state.logs.filter(l=>{
+    const ld=new Date(l.date.replace(/\//g,'-')); return ld>=weekStart;
+  });
+  const tp=totalProgress(); const xp=totalXP(); const {rank,lv}=rankFor(xp);
+  let ctx=`本周（${wk}）学习数据：\n`;
+  ctx+=`等级 Lv.${lv}「${rank.name}」，总进度 ${tp.pct}%\n`;
+  if(weekLogs.length){ ctx+=`\n本周日志（${weekLogs.length}条）：\n`; weekLogs.forEach(l=>ctx+=`  · ${l.date}：${l.text}\n`); }
+  else ctx+=`\n本周无日志记录。\n`;
+  // 本周勾选
+  const weekDone=[];
+  PLAN.forEach(m=>m.weeks.forEach((wk2,i)=>{ if(state.done[m.id+'_'+i]) weekDone.push(`${m.label}${wk2.w} ${wk2.t}`); }));
+  ctx+=`\n已完成任务（累计）：${weekDone.length}项\n`;
+  const weekAch=state.achievements.filter(a=>{ const ad=new Date(a.date.replace(/\./g,'-')); return ad>=weekStart; });
+  if(weekAch.length){ ctx+=`\n本周额外收获：\n`; weekAch.forEach(a=>ctx+=`  · ${a.text}\n`); }
+  const sys=`你是资深 Environment TA / Houdini 学习导师。请为「曙光号」14 周计划生成本周战报，格式：\n【本周一句话】：……\n【可验证产物】：……\n【薄弱点 / Scope Creep】：……\n【下周唯一重点】：……\n中文，200 字内，务实直接。`;
+  const out=document.getElementById('aiOutReview');
+  out.className='ai-out-review show think'; out.textContent='AI 正在生成本周战报…';
+  document.getElementById('reviewDrawer').classList.add('open');
+  const {base,model,key}=state.api;
+  if(!key||!base||!model){ keyOverlay.classList.add('show'); toast('请先配置 AI key ⚙'); out.className='ai-out-review'; return; }
+  try{
+    const res=await fetch(base,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
+      body:JSON.stringify({model,temperature:0.7,messages:[{role:'system',content:sys},{role:'user',content:ctx}]})});
+    if(res.ok){
+      const data=await res.json();
+      const msg=data.choices?.[0]?.message?.content||'（无内容）';
+      out.className='ai-out-review show'; out.textContent=msg;
+      // 保存到周回顾
+      const date=new Date().toLocaleDateString('zh-CN',{month:'2-digit',day:'2-digit'});
+      if(!state.weekReviews) state.weekReviews=[];
+      const existing=state.weekReviews.findIndex(r=>r.week===wk);
+      const entry={week:wk,date,text:msg,aiGenerated:true};
+      if(existing>=0) state.weekReviews[existing]=entry;
+      else state.weekReviews.push(entry);
+      save(); renderReviewDrawer(); toast('📋 本周战报已保存','gold');
+    } else {
+      out.className='ai-out-review show'; out.textContent='❌ 请求失败';
+    }
+  } catch(err){ out.className='ai-out-review show'; out.textContent='❌ 网络错误：'+err.message; }
+};
+
+/* ================= UI HELPERS ================= */
+let toastTimer;
+function toast(msg,cls=''){ const t=document.getElementById('toast'); t.textContent=msg; t.className='toast show '+cls;
+  clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.className='toast '+cls,2200); }
+function showLevelUp(name){ const l=document.getElementById('levelup'); document.getElementById('lvupName').textContent=name;
+  l.classList.add('show'); setTimeout(()=>l.classList.remove('show'),2200); toast('🎖️ 升级！新称号：'+name,'gold'); }
+function escapeHtml(s){ return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+/* ================= INIT ================= */
+render();
+</script>
+</body>
+</html>
