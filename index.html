@@ -132,6 +132,15 @@ h1{font-size:27px;font-weight:800;letter-spacing:-.01em;margin-top:6px;backgroun
 .task .xp{margin-left:auto;flex-shrink:0;font-size:10.5px;font-weight:700;color:var(--gold2);opacity:.7;white-space:nowrap}
 .task.star .tx{font-weight:600}
 .task.milestone{background:linear-gradient(90deg,rgba(245,196,81,.06),transparent);border-color:rgba(245,196,81,.2)}
+.week-detail{margin:7px 11px 0 42px;padding:10px 12px;background:rgba(8,11,17,.58);border:1px solid var(--line);border-radius:10px}
+.week-checks{display:grid;gap:7px}
+.week-check{display:flex;align-items:flex-start;gap:8px;color:var(--sub);font-size:12px;line-height:1.45;cursor:pointer}
+.week-check input{appearance:none;flex:0 0 16px;width:16px;height:16px;margin:1px 0 0;border:1.5px solid var(--line2);border-radius:5px;background:var(--bg);cursor:pointer}
+.week-check input:checked{background:var(--green);border-color:var(--green);box-shadow:inset 0 0 0 3px #163626}
+.week-check:has(input:checked) span{color:var(--dim);text-decoration:line-through}
+.week-deliverable{margin-top:9px;padding-top:8px;border-top:1px dashed var(--line);font-size:11px;color:var(--dim);line-height:1.45}
+.week-deliverable b{color:var(--gold2);font-weight:700}
+.week-mini-progress{margin-left:auto;color:var(--dim);font-size:10px;font-weight:700}
 
 /* daily log */
 .log-input{width:100%;background:var(--bg);border:1px solid var(--line2);border-radius:12px;padding:12px 14px;color:var(--ink);font-size:13px;font-family:inherit;resize:vertical;min-height:80px;line-height:1.6;transition:.15s}
@@ -533,26 +542,26 @@ footer b{color:var(--sub)}
 // 内置曙光号 14 周任务，⭐=里程碑
 const PLAN = [
   {id:'m1',label:'M1',name:'Houdini + AI 地基',color:'blue',weeks:[
-    {w:'W1',t:'Production Rule Sheet + Blockout Reader；Houdini SOP/Attribute；搭出可复用的 ComfyUI 基础 Workflow', xp:55},
-    {w:'W2',t:'Facade / Semantic Attribute；同一白盒生成 2–4 个受控 AI Proposal，并记录 Accept / Reject 理由', xp:55},
-    {w:'W3',t:'⭐ Project Skylark 核心段；完成符合曙光号语言的 Window + Door Socket System', xp:70, milestone:true},
-    {w:'W4',t:'⭐ Roof Edge / Corner / Ground Contact / Signage Candidate + Debug Mode；Semantic Building v0.7', xp:75, milestone:true},
+    {w:'W1',t:'项目、视觉规范与 ComfyUI 基础工作流',c:['建立文件夹、命名与版本规则','确定灰 / 红 / 蓝视觉比例','完成 Houdini → Unreal 最小导出测试','搭建可复用的 ComfyUI 基础工作流','记录一次生成的目的、参数和结果'],d:'项目骨架；视觉宪法；ComfyUI 工作流；导入截图',xp:55},
+    {w:'W2',t:'白盒与 AI Proposal 对照实验',c:['手动完成 Hero Building 白盒','围绕同一生产问题生成 2–4 个受控变体','为每个方案记录 Accept / Reject / Modify','记录选择依据，不把 AI 图直接当最终设计'],d:'手动白盒；AI 候选板；验证记录；选定方向',xp:55},
+    {w:'W3',t:'模块、插槽与命名规范',c:['定义墙体 / 窗 / 门 / 屋顶模块','建立 socket / anchor 规则','验证尺度、朝向、Pivot 与命名','输出模块规范页'],d:'模块库 v1；插槽测试；命名表',xp:70,milestone:true},
+    {w:'W4',t:'语义化建筑原型',c:['将立面拆成可读参数','让高度、开间、窗型等参数可控','制作至少 3 个稳定变体','在 Unreal 验证替换与材质'],d:'Semantic Building Prototype v1；3 个变体；UE 截图',xp:75,milestone:true},
   ]},
   {id:'m2',label:'M2',name:'Intent + Damage',color:'gold',weeks:[
-    {w:'W5',t:'⭐ 封装 HDA；Building / Window / Door / Signage / Debug 参数；完成多建筑压力测试', xp:75, milestone:true},
-    {w:'W6',t:'⭐ 1 Building 首次闭环：Manual Guide / ComfyUI Proposal → Artist Validation → Houdini Damage → Unreal Smoke Test', xp:85, milestone:true},
-    {w:'W7',t:'Secondary Damage + Wear；保留 Manual 与 AI-assisted 两组输入，对比成本、可控性、速度与人工修正', xp:65},
-    {w:'W8',t:'⭐ Damage MVP：双分支 Artist Intent、明确 Validation、Guide / Mask 转换与 Surface Data 全部进入 Unreal', xp:90, milestone:true},
+    {w:'W5',t:'Building Creator MVP',c:['输入 Footprint / Height / Floor Count','生成墙、窗、门和屋顶','暴露关键艺术控制参数','修复穿插、翻面与尺度问题'],d:'Building Creator MVP；参数说明；演示录屏',xp:75,milestone:true},
+    {w:'W6',t:'首次完整双分支闭环',c:['Manual Control 生成一个方案','AI Proposal 生成候选并完成验证','将被接受方案翻译为 Houdini 参数','输出同一 Hero Building 到 Unreal','记录链路中断点'],d:'完整闭环；Manual / AI 对照；UE 场景',xp:85,milestone:true},
+    {w:'W7',t:'损坏 / 磨损系统与比较实验',c:['制作裂缝、缺口或边缘磨损','保留强度、区域、随机种控制','比较 Manual 与 AI-Assisted 方案','记录 AI 真正节省和没有节省的环节'],d:'Damage / Wear v1；对照表；问题清单',xp:65},
+    {w:'W8',t:'Damage MVP 与 Artist Intent 定版',c:['稳定主形体与次生损坏流程','完成 Manual / AI Proposal / Validation 展示图','锁定输入、输出和失败回退方式','完成阶段复盘'],d:'Damage MVP；双分支流程图；阶段演示',xp:90,milestone:true},
   ]},
   {id:'m3',label:'M3',name:'Growth + Unreal',color:'blue',weeks:[
-    {w:'W9',t:'Curve / Resample / Ray / xyzdist / primuv；完成墙面 Vine Prototype', xp:55},
-    {w:'W10',t:'⭐ 以 wall / roof_edge / ground_contact / damage_border 驱动 Macro–Medium–Micro Overgrowth', xp:70, milestone:true},
-    {w:'W11',t:'⭐ Integrated Pipeline：Building → Manual / AI Proposal → Validation → Damage → Reclassify → Overgrowth → Unreal', xp:85, milestone:true},
-    {w:'W12',t:'⭐ Unreal PCG 做 rubble / weed / debris / props；复用已有资产；Hero Area 人工构图', xp:80, milestone:true},
+    {w:'W9',t:'藤蔓 / 过度生长原型',c:['建立种子点、方向与附着规则','控制生长区域与密度','避免悬空、穿墙和无意义噪声','在 Unreal 验证'],d:'Overgrowth v1；控制参数；UE 截图',xp:55},
+    {w:'W10',t:'Overgrowth MVP',c:['增加遮罩 / 高度 / 朝向控制','完成 2–3 种可信分布','检查性能与实例化策略','固化导出规则'],d:'Overgrowth MVP；性能记录；演示录屏',xp:70,milestone:true},
+    {w:'W11',t:'管线整合',c:['串联 Manual / AI Proposal → Validation → Houdini → UE','让建筑、损坏和藤蔓可组合','完成端到端重建测试','记录失败案例与回退方案'],d:'Integrated Pipeline v1；流程图；失败案例页',xp:85,milestone:true},
+    {w:'W12',t:'Unreal PCG Blockout',c:['用 PCG 布置周边环境 / 街区块面','保持 Hero Building 为视觉中心','控制密度、层级与可读性','完成镜头初版'],d:'PCG Blockout；镜头列表；场景漫游',xp:80,milestone:true},
   ]},
   {id:'m35',label:'M3.5',name:'最终收口',color:'gold',weeks:[
-    {w:'W13',t:'⭐ 按视觉宪法完成最终灯光 / 材质 / 构图，并记录优化前后技术数据', xp:80, milestone:true},
-    {w:'W14',t:'⭐ Portfolio Freeze：展示 Artist Intent Diagram、Manual vs AI-assisted、Validation、Houdini Processor 与最终场景', xp:100, milestone:true},
+    {w:'W13',t:'Final Art / Tech Polish',c:['修复最影响观感的 3–5 个问题','完成材质、灯光、构图与性能整理','录制流程与结果镜头','停止扩展新系统'],d:'Final Candidate；性能检查；视频素材',xp:80,milestone:true},
+    {w:'W14',t:'Portfolio Freeze',c:['完成 Artist Intent 总流程图','展示 Manual Control、AI Proposal 与 Validation','展示 Houdini 控制、UE 结果和前后对比','写清个人职责、挑战、取舍与结论','备份最终版本'],d:'作品集页面；最终视频 / GIF；归档包',xp:100,milestone:true},
   ]},
 ];
 
@@ -740,7 +749,7 @@ const CARD_CATS = ['AI Proposal','Artist Validation','Building','Damage','Growth
 
 function defaultState(){
   return {
-    done:{}, logs:[], achievements:[], curMonth:'m1', firstDay:null,
+    done:{}, subDone:{}, logs:[], achievements:[], curMonth:'m1', firstDay:null,
     startDate:'2026-09-17',   // v2 计划开始日期
     habits:{},        // { "2026-07-22": {watch:true, hands:false, ...} }
     weekReviews:[],   // [ {week:'2026-W30', text:'AI生成的回顾', logs:[...], date:'...'} ]
@@ -853,7 +862,8 @@ function renderTasks(m){
     const done = !!state.done[key];
     const tuts = TUTORIALS[tutKey] || [];
     const g = document.createElement('div'); g.className='wk-group';
-    g.innerHTML = `<div class="wk-title">${wk.w}${wk.milestone?' <span class="star">⭐ 里程碑</span>':''}</div>`;
+    const subCount=(wk.c||[]).filter((_,j)=>state.subDone[key+'_'+j]).length;
+    g.innerHTML = `<div class="wk-title">${wk.w}${wk.milestone?' <span class="star">⭐ 里程碑</span>':''}<span class="week-mini-progress">${subCount}/${(wk.c||[]).length} 项</span></div>`;
 
     // task row (checkbox only — not the tutorial toggle)
     const t = document.createElement('div');
@@ -894,6 +904,36 @@ function renderTasks(m){
     }
 
     g.appendChild(t); area.appendChild(g);
+    if(wk.c && wk.c.length){
+      const detail=document.createElement('div');
+      detail.className='week-detail';
+      const checks=document.createElement('div');
+      checks.className='week-checks';
+      wk.c.forEach((item,j)=>{
+        const subKey=key+'_'+j;
+        const label=document.createElement('label');
+        label.className='week-check';
+        label.innerHTML=`<input type="checkbox" ${state.subDone[subKey]?'checked':''}><span>${escapeHtml(item)}</span>`;
+        label.querySelector('input').onchange=(e)=>{
+          state.subDone[subKey]=e.target.checked;
+          const allDone=wk.c.every((_,n)=>state.subDone[key+'_'+n]);
+          if(allDone && !state.done[key]){
+            state.done[key]=true;
+            toast(`✓ ${wk.w} 必做项全部完成！+${wk.xp} XP`,wk.milestone?'gold':'');
+          }
+          save(); render();
+        };
+        checks.appendChild(label);
+      });
+      detail.appendChild(checks);
+      if(wk.d){
+        const delivery=document.createElement('div');
+        delivery.className='week-deliverable';
+        delivery.innerHTML=`<b>本周交付：</b>${escapeHtml(wk.d)}`;
+        detail.appendChild(delivery);
+      }
+      g.appendChild(detail);
+    }
   });
 }
 
