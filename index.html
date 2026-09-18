@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>曙光号 · Environment TA 航行日志</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%230c0f16'/%3E%3Cpath d='M9 43 32 8l23 35H41l-9-14-9 14Z' fill='%23d33b32'/%3E%3Cpath d='M24 47h16v7H24z' fill='%2376a7e8'/%3E%3C/svg%3E">
 <style>
 :root{
   --bg:#0c0f16;
@@ -52,6 +53,11 @@ h1{font-size:27px;font-weight:800;letter-spacing:-.01em;margin-top:6px;backgroun
 .btn:hover{border-color:var(--accent);background:var(--panel2);box-shadow:var(--glow-blue)}
 .btn.gold:hover{border-color:var(--gold);box-shadow:var(--glow-gold)}
 .btn.ghost{background:transparent}
+
+/* ===== production pipeline ===== */
+.pipeline-card{background:linear-gradient(120deg,rgba(211,59,50,.11),rgba(63,120,197,.08) 55%,var(--panel));border:1px solid var(--line2);border-radius:16px;padding:16px 18px;margin-bottom:16px;box-shadow:var(--shadow)}
+.pipeline-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:12px}.pipeline-head b{font-size:14px}.version{font-size:11px;color:var(--accent2);border:1px solid rgba(238,90,79,.35);padding:3px 8px;border-radius:20px}
+.pipeline{display:grid;grid-template-columns:1.15fr auto 1fr auto 1fr auto .8fr;align-items:stretch;gap:8px}.pipe-node{background:rgba(12,15,22,.78);border:1px solid var(--line2);border-radius:10px;padding:10px 12px;min-width:0}.pipe-node strong{display:block;font-size:12px;color:var(--ink)}.pipe-node span{display:block;font-size:10.5px;color:var(--sub);margin-top:3px}.pipe-node.core{border-color:rgba(211,59,50,.55)}.pipe-node.final{border-color:rgba(118,167,232,.55)}.pipe-arrow{align-self:center;color:var(--dim);font-size:18px}.mvp-note{font-size:11.5px;color:var(--gold2);margin-top:11px;padding-top:10px;border-top:1px dashed var(--line2)}
 
 /* ===== level card ===== */
 .level-card{background:linear-gradient(135deg,var(--panel),var(--bg2));border:1px solid var(--line);border-radius:18px;padding:20px 22px;margin-bottom:16px;box-shadow:var(--shadow);position:relative;overflow:hidden}
@@ -297,6 +303,7 @@ footer b{color:var(--sub)}
   .habits-row{gap:7px}
   .habit-btn{min-width:90px;padding:10px 10px}
   .cd-pace{gap:8px}
+  .pipeline{grid-template-columns:1fr}.pipe-arrow{transform:rotate(90deg);justify-self:center;height:12px;line-height:12px}
 }
 </style>
 </head>
@@ -306,15 +313,26 @@ footer b{color:var(--sub)}
   <!-- HEADER -->
   <header>
     <div class="title-box">
-      <div class="kicker">◈ PROJECT AURORA · PRODUCTION LOG</div>
+      <div class="kicker">◈ PROJECT AURORA · AI-ASSISTED PIPELINE V2</div>
       <h1>曙光号 · Environment TA 航行日志</h1>
-      <div class="sub">14 周，把既有美术规则变成可运行的 Building / Damage / Overgrowth 管线。</div>
+      <div class="sub">2026.09.17 起 · 14 周，把模糊审美意图转成可验证、可控、可落地的 Environment Authoring Pipeline。</div>
     </div>
     <div class="header-right">
       <button class="btn ghost" id="btnData">⇅ 数据</button>
       <button class="btn gold" id="btnKey">⚙ AI 设置</button>
     </div>
   </header>
+
+  <section class="pipeline-card" aria-label="核心生产链路">
+    <div class="pipeline-head"><b>核心生产链路</b><span class="version">AI-Assisted v2</span></div>
+    <div class="pipeline">
+      <div class="pipe-node"><strong>ARTIST INTENT</strong><span>Manual Guide / AI Proposal</span></div><div class="pipe-arrow">→</div>
+      <div class="pipe-node core"><strong>ARTIST VALIDATION</strong><span>Accept / Reject / Paint / Adjust</span></div><div class="pipe-arrow">→</div>
+      <div class="pipe-node"><strong>HOUDINI PROCESSOR</strong><span>Deterministic geometry & data</span></div><div class="pipe-arrow">→</div>
+      <div class="pipe-node final"><strong>UNREAL</strong><span>Final asset</span></div>
+    </div>
+    <div class="mvp-note">MVP：只做 1 个 Hero Building，也必须完整打通 Manual / AI Proposal → Artist Validation → Houdini → Unreal。</div>
+  </section>
 
   <!-- COUNTDOWN BAR -->
   <div class="countdown-bar" id="countdownBar">
@@ -514,27 +532,27 @@ footer b{color:var(--sub)}
 /* ================= DATA MODEL ================= */
 // 内置曙光号 14 周任务，⭐=里程碑
 const PLAN = [
-  {id:'m1',label:'M1',name:'Houdini 地基',color:'blue',weeks:[
-    {w:'W1',t:'视觉宪法 → Production Rule Sheet；Houdini UI/SOP/Attribute；Normal + dot 分类墙与屋顶', xp:50},
-    {w:'W2',t:'Attribute / VEX 基础；Facade ID、Floor ID、Corner、Ground Contact；完成 Facade Analyzer', xp:50},
+  {id:'m1',label:'M1',name:'Houdini + AI 地基',color:'blue',weeks:[
+    {w:'W1',t:'Production Rule Sheet + Blockout Reader；Houdini SOP/Attribute；搭出可复用的 ComfyUI 基础 Workflow', xp:55},
+    {w:'W2',t:'Facade / Semantic Attribute；同一白盒生成 2–4 个受控 AI Proposal，并记录 Accept / Reject 理由', xp:55},
     {w:'W3',t:'⭐ Project Skylark 核心段；完成符合曙光号语言的 Window + Door Socket System', xp:70, milestone:true},
     {w:'W4',t:'⭐ Roof Edge / Corner / Ground Contact / Signage Candidate + Debug Mode；Semantic Building v0.7', xp:75, milestone:true},
   ]},
-  {id:'m2',label:'M2',name:'Creator + Damage',color:'gold',weeks:[
+  {id:'m2',label:'M2',name:'Intent + Damage',color:'gold',weeks:[
     {w:'W5',t:'⭐ 封装 HDA；Building / Window / Door / Signage / Debug 参数；完成多建筑压力测试', xp:75, milestone:true},
-    {w:'W6',t:'Boolean / VDB / Cleanup；Artist Damage Guide → Large Damage Prototype', xp:55},
-    {w:'W7',t:'Curvature / Border / Secondary Chips / Wear Mask / Exposed Structure；Damage Processor Beta', xp:60},
-    {w:'W8',t:'⭐ UV / Material Group / Houdini Engine；Exterior / Interior / Wear / Graphic Data 进入 UE', xp:80, milestone:true},
+    {w:'W6',t:'⭐ 1 Building 首次闭环：Manual Guide / ComfyUI Proposal → Artist Validation → Houdini Damage → Unreal Smoke Test', xp:85, milestone:true},
+    {w:'W7',t:'Secondary Damage + Wear；保留 Manual 与 AI-assisted 两组输入，对比成本、可控性、速度与人工修正', xp:65},
+    {w:'W8',t:'⭐ Damage MVP：双分支 Artist Intent、明确 Validation、Guide / Mask 转换与 Surface Data 全部进入 Unreal', xp:90, milestone:true},
   ]},
   {id:'m3',label:'M3',name:'Growth + Unreal',color:'blue',weeks:[
     {w:'W9',t:'Curve / Resample / Ray / xyzdist / primuv；完成墙面 Vine Prototype', xp:55},
     {w:'W10',t:'⭐ 以 wall / roof_edge / ground_contact / damage_border 驱动 Macro–Medium–Micro Overgrowth', xp:70, milestone:true},
-    {w:'W11',t:'⭐ Building → Damage → Reclassify → Overgrowth；Houdini Engine Recook / Bake 与组合测试', xp:80, milestone:true},
+    {w:'W11',t:'⭐ Integrated Pipeline：Building → Manual / AI Proposal → Validation → Damage → Reclassify → Overgrowth → Unreal', xp:85, milestone:true},
     {w:'W12',t:'⭐ Unreal PCG 做 rubble / weed / debris / props；复用已有资产；Hero Area 人工构图', xp:80, milestone:true},
   ]},
   {id:'m35',label:'M3.5',name:'最终收口',color:'gold',weeks:[
     {w:'W13',t:'⭐ 按视觉宪法完成最终灯光 / 材质 / 构图，并记录优化前后技术数据', xp:80, milestone:true},
-    {w:'W14',t:'⭐ 禁止新功能；完成技术录屏、Beauty、20–40s Cinematic 与 Portfolio Page', xp:100, milestone:true},
+    {w:'W14',t:'⭐ Portfolio Freeze：展示 Artist Intent Diagram、Manual vs AI-assisted、Validation、Houdini Processor 与最终场景', xp:100, milestone:true},
   ]},
 ];
 
@@ -682,16 +700,21 @@ const LEGACY_TUTORIALS = {
 const TUTORIALS = {
   'm1_0':[
     {type:'doc',label:'SideFX · Houdini Foundations',url:'https://www.sidefx.com/learn/getting_started/'},
-    {type:'bili',label:'B 站搜：Houdini SOP Attribute 入门',url:'https://search.bilibili.com/all?keyword=Houdini+SOP+Attribute+%E5%85%A5%E9%97%A8'}
+    {type:'bili',label:'B 站搜：Houdini SOP Attribute 入门',url:'https://search.bilibili.com/all?keyword=Houdini+SOP+Attribute+%E5%85%A5%E9%97%A8'},
+    {type:'yt',label:'ComfyUI 基础 Workflow',url:'https://www.youtube.com/results?search_query=ComfyUI+beginner+workflow+img2img'}
   ],
   'm1_1':[
     {type:'doc',label:'SideFX · VEX 语言参考',url:'https://www.sidefx.com/docs/houdini/vex/'},
-    {type:'bili',label:'B 站搜：Houdini VEX dot cross',url:'https://search.bilibili.com/all?keyword=Houdini+VEX+dot+cross'}
+    {type:'bili',label:'B 站搜：Houdini VEX dot cross',url:'https://search.bilibili.com/all?keyword=Houdini+VEX+dot+cross'},
+    {type:'bili',label:'B 站搜：ComfyUI 白盒 Img2Img',url:'https://search.bilibili.com/all?keyword=ComfyUI+%E7%99%BD%E7%9B%92+Img2Img'}
   ],
   'm1_2':[{type:'doc',label:'SideFX · Project Skylark Building Generator',url:'https://www.sidefx.com/tutorials/project-skylark-building-generator/'}],
   'm1_3':[{type:'doc',label:'SideFX · Digital Assets / HDA',url:'https://www.sidefx.com/docs/houdini/assets/'}],
   'm2_0':[{type:'doc',label:'SideFX · Houdini Digital Assets',url:'https://www.sidefx.com/docs/houdini/assets/'}],
-  'm2_1':[{type:'doc',label:'SideFX · Boolean SOP',url:'https://www.sidefx.com/docs/houdini/nodes/sop/boolean.html'}],
+  'm2_1':[
+    {type:'doc',label:'SideFX · Boolean SOP',url:'https://www.sidefx.com/docs/houdini/nodes/sop/boolean.html'},
+    {type:'bili',label:'B 站搜：ComfyUI Damage Mask 工作流',url:'https://search.bilibili.com/all?keyword=ComfyUI+damage+mask+workflow'}
+  ],
   'm2_2':[{type:'doc',label:'SideFX · Measure / Curvature',url:'https://www.sidefx.com/docs/houdini/nodes/sop/measure.html'}],
   'm2_3':[{type:'doc',label:'SideFX · Houdini Engine for Unreal',url:'https://www.sidefx.com/docs/houdini/unreal/'}],
   'm3_0':[{type:'doc',label:'SideFX · xyzdist / primuv',url:'https://www.sidefx.com/docs/houdini/vex/functions/xyzdist.html'}],
@@ -703,22 +726,22 @@ const TUTORIALS = {
 };
 
 /* ================= STATE ================= */
-const LS_KEY = 'aurora_environment_ta_tracker_v1';
+const LS_KEY = 'aurora_environment_ta_tracker_ai_v2';
 let state = load();
 
 const HABITS = [
-  {id:'hands', ico:'🛠️', title:'动手实操',     sub:'在 Houdini / UE 里做'},
-  {id:'capture', ico:'🎥', title:'录制进度',    sub:'30–90 秒可验证结果'},
-  {id:'version', ico:'◫', title:'版本保存',     sub:'可回退、可对比'},
-  {id:'scope', ico:'✂️', title:'守住范围',      sub:'没有重新发散世界观'},
+  {id:'hands', ico:'🛠️', title:'动手实操',     sub:'Houdini / Unreal 有产出'},
+  {id:'validate', ico:'◆', title:'艺术家确认',  sub:'AI 结果有 Accept / Reject'},
+  {id:'capture', ico:'🎥', title:'录制证据',     sub:'30–90 秒可验证结果'},
+  {id:'scope', ico:'✂️', title:'守住 V1',       sub:'没有 Agent / API / JSON'},
 ];
 
-const CARD_CATS = ['Building','Damage','Growth','Houdini','Unreal','材质','其他'];
+const CARD_CATS = ['AI Proposal','Artist Validation','Building','Damage','Growth','Houdini','Unreal','其他'];
 
 function defaultState(){
   return {
     done:{}, logs:[], achievements:[], curMonth:'m1', firstDay:null,
-    startDate:null,   // 计划开始日期 YYYY-MM-DD
+    startDate:'2026-09-17',   // v2 计划开始日期
     habits:{},        // { "2026-07-22": {watch:true, hands:false, ...} }
     weekReviews:[],   // [ {week:'2026-W30', text:'AI生成的回顾', logs:[...], date:'...'} ]
     cardCat:{},       // { achId: '分类字符串' }
@@ -993,7 +1016,7 @@ function renderCardLibrary(){
   const medals=['🥉','🥈','🥇','🏆','💎'];
   const filtered = state.achievements.filter(a=>activeCatFilter==='all'||(state.cardCat[a.id]||'其他')===activeCatFilter);
   if(!filtered.length){ grid.innerHTML='<div class="empty" style="grid-column:1/-1">'+( total>0?`当前分类暂无卡片`:`还没有额外收获。学了计划外的东西就记进来吧 🌟`)+'</div>'; return; }
-  const catColors={'Building':'#76a7e8','Damage':'#ee5a4f','Growth':'#3fd48a','Houdini':'#ffd97a','Unreal':'#4d8dff','材质':'#b57cff','其他':'#5c6883'};
+  const catColors={'AI Proposal':'#b57cff','Artist Validation':'#ee5a4f','Building':'#76a7e8','Damage':'#ff745f','Growth':'#3fd48a','Houdini':'#ffd97a','Unreal':'#4d8dff','其他':'#5c6883'};
   [...filtered].reverse().forEach(a=>{
     const cat = state.cardCat[a.id]||'其他';
     const xp = a.xp||XP_PER_ACH;
@@ -1072,7 +1095,7 @@ document.getElementById('btnAch').onclick = async ()=>{
   // 调 AI 评分（后台静默，不占大 AI 面板）
   try{
     const {base,model,key}=state.api;
-    const sys=`你是资深 Environment TA / Houdini 技术美术导师。学习者正按 14 周「曙光号」计划推进 Building Creator、Semantic Data、Art-Directed Damage、Overgrowth、Houdini Engine、Unreal PCG 与作品集闭环。评估新记录的计划外收获，返回严格 JSON（不要 markdown 或多余文字）：{"xp":数字,"note":"一句话评语（≤25字，中文）"}。xp规则：40=直接强化主线，20=周边支撑，10=泛用但有限。`;
+    const sys=`你是资深 Environment TA / Houdini / ComfyUI 技术美术导师。学习者正按「曙光号 AI-Assisted Pipeline v2」推进 Artist Intent（Manual / AI Proposal）→ Artist Validation → Houdini Processor → Unreal。评估计划外收获是否强化这条可控闭环。返回严格 JSON（不要 markdown 或多余文字）：{"xp":数字,"note":"一句话评语（≤25字，中文）"}。xp：40=直接强化闭环，20=周边支撑，10=容易造成 Scope Creep 或仅泛用。`;
     const user=`学习者新记录的计划外收获：「${text}」`;
     const res=await fetch(base,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
       body:JSON.stringify({model,temperature:0.3,messages:[{role:'system',content:sys},{role:'user',content:user}]})});
@@ -1183,7 +1206,7 @@ document.getElementById('btnReset').onclick=()=>{
 function buildContext(){
   const tp=totalProgress(); const xp=totalXP(); const {rank,lv}=rankFor(xp);
   let lines=[];
-  lines.push(`学习者正在按 14 周计划完成「曙光号」Environment TA Vertical Slice。`);
+  lines.push(`学习者从 2026-09-17 起按 14 周计划完成「曙光号 AI-Assisted Environment Pipeline v2」，MVP 是 1 个建筑完整闭环。`);
   lines.push(`当前等级 Lv.${lv}「${rank.name}」，总经验 ${xp} XP。总进度 ${tp.pct}%（${tp.done}/${tp.total} 周任务）。`);
   lines.push(`连续打卡 ${calcStreak()} 天，累计打卡 ${uniqueDays()} 天。额外（计划外）成就 ${state.achievements.length} 条。`);
   lines.push(`\n各月进度：`);
@@ -1211,11 +1234,11 @@ async function callAI(systemPrompt, userPrompt){
 }
 
 document.getElementById('btnAiEval').onclick=()=>{
-  const sys=`你是一位资深 Environment TA 导师，专精 Houdini 程序化建模、HDA、Houdini Engine 与 Unreal PCG。学习者按 14 周「曙光号」计划完成 Building Creator → Damage → Overgrowth → Unreal → Portfolio。请基于进度做简洁务实的评估：一句话判断节奏；做得好的地方；当前风险，尤其 Scope Creep、语义数据或跨引擎落地；下周最重要的 2–3 件事。中文，300 字内。`;
+  const sys=`你是一位资深 Environment TA 导师，专精 Houdini、ComfyUI controlled generation、HDA 与 Unreal。学习者的 v2 主线是 Artist Intent（Manual / AI Proposal）→ Artist Validation → Houdini Processor → Unreal，MVP 只要求 1 栋楼但链路必须完整。请评估节奏、可验证产物、Validation 是否真实存在，以及是否过早进入 Agent/API/JSON/自动化。给出下周最重要的 2–3 件事。中文，300 字内。`;
   callAI(sys, buildContext());
 };
 document.getElementById('btnAiPlan').onclick=()=>{
-  const sys=`你是资深 Environment TA / Houdini 导师。根据当前阶段与已完成情况，只为今天约 2 小时给出一个可立刻执行的小任务：1 个主任务、3–5 个步骤、明确完成标志，并提醒不要重新发散世界观。中文，200 字内。`;
+  const sys=`你是资深 Environment TA / Houdini / ComfyUI 导师。根据当前阶段，只为今天约 2 小时给出一个可立刻执行的小任务：1 个主任务、3–5 个步骤、明确的可验证产物。若涉及 AI，必须说明它回答的生产问题和 Artist Validation 步骤；禁止提前做 Agent/API/JSON。中文，200 字内。`;
   callAI(sys, buildContext());
 };
 document.getElementById('btnAiWeek').onclick = async ()=>{
@@ -1237,7 +1260,7 @@ document.getElementById('btnAiWeek').onclick = async ()=>{
   ctx+=`\n已完成任务（累计）：${weekDone.length}项\n`;
   const weekAch=state.achievements.filter(a=>{ const ad=new Date(a.date.replace(/\./g,'-')); return ad>=weekStart; });
   if(weekAch.length){ ctx+=`\n本周额外收获：\n`; weekAch.forEach(a=>ctx+=`  · ${a.text}\n`); }
-  const sys=`你是资深 Environment TA / Houdini 学习导师。请为「曙光号」14 周计划生成本周战报，格式：\n【本周一句话】：……\n【可验证产物】：……\n【薄弱点 / Scope Creep】：……\n【下周唯一重点】：……\n中文，200 字内，务实直接。`;
+  const sys=`你是资深 Environment TA / Houdini / ComfyUI 学习导师。请为「曙光号 AI-Assisted Pipeline v2」生成战报：\n【本周一句话】\n【可验证产物】\n【Artist Validation 证据】\n【Scope Creep】\n【下周唯一重点】\n若 AI Proposal 没进入 Guide/Mask/Houdini，就明确指出它还只是参考图。中文，220 字内。`;
   const out=document.getElementById('aiOutReview');
   out.className='ai-out-review show think'; out.textContent='AI 正在生成本周战报…';
   document.getElementById('reviewDrawer').classList.add('open');
