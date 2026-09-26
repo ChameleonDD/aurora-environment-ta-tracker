@@ -322,9 +322,9 @@ footer b{color:var(--sub)}
   <!-- HEADER -->
   <header>
     <div class="title-box">
-      <div class="kicker">◈ PROJECT AURORA · AI-ASSISTED PIPELINE V2</div>
+      <div class="kicker">◈ PROJECT AURORA · PRODUCTION CASE STUDY V3</div>
       <h1>曙光号 · Environment TA 航行日志</h1>
-      <div class="sub">2026.09.17 起 · 14 周，把模糊审美意图转成可验证、可控、可落地的 Environment Authoring Pipeline。</div>
+      <div class="sub">2026.09.17 起 · 22 周，用一项可测量的 Production Case Study 验证建筑工具的稳健性、规模价值与 AI 辅助边界。</div>
     </div>
     <div class="header-right">
       <button class="btn ghost" id="btnData">⇅ 数据</button>
@@ -333,14 +333,14 @@ footer b{color:var(--sub)}
   </header>
 
   <section class="pipeline-card" aria-label="核心生产链路">
-    <div class="pipeline-head"><b>核心生产链路</b><span class="version">AI-Assisted v2</span></div>
+    <div class="pipeline-head"><b>Environment Asset Production Pipeline</b><span class="version">CASE STUDY v3</span></div>
     <div class="pipeline">
-      <div class="pipe-node"><strong>ARTIST INTENT</strong><span>Manual Guide / AI Proposal</span></div><div class="pipe-arrow">→</div>
-      <div class="pipe-node core"><strong>ARTIST VALIDATION</strong><span>Accept / Reject / Paint / Adjust</span></div><div class="pipe-arrow">→</div>
-      <div class="pipe-node"><strong>HOUDINI PROCESSOR</strong><span>Deterministic geometry & data</span></div><div class="pipe-arrow">→</div>
-      <div class="pipe-node final"><strong>UNREAL</strong><span>Final asset</span></div>
+      <div class="pipe-node"><strong>ARTIST INPUT</strong><span>Whitebox / Semantic Guide</span></div><div class="pipe-arrow">→</div>
+      <div class="pipe-node core"><strong>HOUDINI PROCESSOR</strong><span>Building / Damage / Data</span></div><div class="pipe-arrow">→</div>
+      <div class="pipe-node"><strong>UNREAL</strong><span>Scale / Batch / Scene</span></div><div class="pipe-arrow">→</div>
+      <div class="pipe-node final"><strong>VALIDATION</strong><span>Robustness / ROI / Case Study</span></div>
     </div>
-    <div class="mvp-note">MVP：只做 1 个 Hero Building，也必须完整打通 Manual / AI Proposal → Artist Validation → Houdini → Unreal。</div>
+    <div class="mvp-note">Production Case Study：先证明 Procedural Building → Artist Input → Damage → Unreal 稳健可用，再用实验回答 AI 是否能降低探索成本。</div>
   </section>
 
   <!-- COUNTDOWN BAR -->
@@ -382,12 +382,13 @@ footer b{color:var(--sub)}
   <div class="bars">
     <div class="bar-card wide">
       <div class="bar-head">
-        <div class="name"><span class="ico">◈</span>14 周任务总进度</div>
+        <div class="name"><span class="ico">◈</span>五个月计划总进度</div>
         <div class="pct blue" id="totalPct">0%</div>
       </div>
       <div class="track"><div class="fill blue" id="totalFill"></div></div>
-      <div class="bar-sub" id="totalSub">共 14 周任务 · 已完成 0 项</div>
+      <div class="bar-sub" id="totalSub">共 22 周任务 · 已完成 0 项</div>
       <div class="month-mini" id="monthMini"></div>
+      <div class="bar-sub" id="legacyProgressNote"></div>
     </div>
 
     <div class="bar-card">
@@ -415,7 +416,7 @@ footer b{color:var(--sub)}
     <!-- LEFT: month tasks -->
     <div class="col-panel">
       <div class="panel-title">
-        <div class="l"><span class="ico">🎯</span><span id="taskMonthTitle">M1 · 地基</span> 任务</div>
+        <div class="l"><span class="ico">🎯</span><span id="taskMonthTitle">M0 · Houdini 地基</span> 任务</div>
         <span class="pill" id="taskCount">0 / 4</span>
       </div>
       <div id="taskArea"></div>
@@ -486,7 +487,7 @@ footer b{color:var(--sub)}
 <div class="overlay" id="dateOverlay">
   <div class="modal">
     <h3>📅 设置计划日期</h3>
-    <p class="d">填入你正式开始这个 14 周计划的日期，系统会自动计算剩余天数和进度节奏。</p>
+    <p class="d">填入五个月计划的开始日期，系统按 22 周计算剩余时间和进度节奏。</p>
     <div class="field"><label>开始日期</label><input type="date" id="startDateInput"></div>
     <div class="note">💡 开始日期会影响"按时/偏慢/超前"的节奏判断。如果你已经学了一段时间，填实际开始学习的日期。</div>
     <div class="modal-actions">
@@ -523,7 +524,7 @@ footer b{color:var(--sub)}
 <div class="overlay" id="dataOverlay">
   <div class="modal">
     <h3>⇅ 数据管理</h3>
-    <p class="d">导出把全部进度存成 JSON 文件备份；导入可从备份恢复或迁到别的设备/浏览器。</p>
+    <p class="d">导出备份全部进度。旧版 14 周网站导出的 JSON 也可直接导入：日志、习惯、成就、设置和旧任务勾选会保留，新版任务从独立进度开始。</p>
     <div class="modal-actions" style="flex-direction:column">
       <button class="btn primary" id="btnExport" style="width:100%">⬇ 导出备份（JSON）</button>
       <button class="btn" id="btnImport" style="width:100%">⬆ 导入备份</button>
@@ -539,29 +540,43 @@ footer b{color:var(--sub)}
 
 <script>
 /* ================= DATA MODEL ================= */
-// 内置曙光号 14 周任务，⭐=里程碑
+// Production Case Study v3：W1–W22；旧版 done/subDone 字段作为历史进度保留
 const PLAN = [
-  {id:'m1',label:'M1',name:'Houdini + AI 地基',color:'blue',weeks:[
-    {w:'W1',t:'项目、视觉规范与 ComfyUI 基础工作流',c:['建立文件夹、命名与版本规则','确定灰 / 红 / 蓝视觉比例','完成 Houdini → Unreal 最小导出测试','搭建可复用的 ComfyUI 基础工作流','记录一次生成的目的、参数和结果'],d:'项目骨架；视觉宪法；ComfyUI 工作流；导入截图',xp:55},
-    {w:'W2',t:'白盒与 AI Proposal 对照实验',c:['手动完成 Hero Building 白盒','围绕同一生产问题生成 2–4 个受控变体','为每个方案记录 Accept / Reject / Modify','记录选择依据，不把 AI 图直接当最终设计'],d:'手动白盒；AI 候选板；验证记录；选定方向',xp:55},
-    {w:'W3',t:'模块、插槽与命名规范',c:['定义墙体 / 窗 / 门 / 屋顶模块','建立 socket / anchor 规则','验证尺度、朝向、Pivot 与命名','输出模块规范页'],d:'模块库 v1；插槽测试；命名表',xp:70,milestone:true},
-    {w:'W4',t:'语义化建筑原型',c:['将立面拆成可读参数','让高度、开间、窗型等参数可控','制作至少 3 个稳定变体','在 Unreal 验证替换与材质'],d:'Semantic Building Prototype v1；3 个变体；UE 截图',xp:75,milestone:true},
+  {id:'m0',label:'M0',name:'Houdini 地基',color:'blue',weeks:[
+    {w:'W1',t:'SOP 基础、参数化 Sketch 与导出',c:['练习 Point / Primitive / Vertex / Detail 与 Group / Blast','练习 Transform、Merge、PolyExtrude、Attribute、Normal','独立搭建简单 SOP 链，并暴露 1–3 个参数','完成一个简单 Houdini → Unreal 输出测试','让 ComfyUI 基础 Workflow 可重复运行'],d:'至少 2 个 Houdini Sketch；导出测试；可复用的 ComfyUI Workflow',xp:55},
+    {w:'W2',t:'从节点练习转向规则思维',c:['练习 Copy to Points、For-Each 与 Boolean 基础','完成 2–3 个小型 Procedural Sketch','每个 Sketch 明确输入、规则、参数和输出','不看教程重做一个已学模型'],d:'2–3 个可调参 Sketch；输入 / 规则 / 输出说明',xp:55},
+    {w:'W3',t:'独立完成第一个程序化物体',c:['完成一个简单 Procedural Object','说明输入数据及其变化过程','说明参数分别控制什么','说明输出如何进入 Unreal','复盘最常见的 SOP / VEX 卡点'],d:'可重复生成的程序化物体；短演示；技术复盘',xp:70,milestone:true},
   ]},
-  {id:'m2',label:'M2',name:'Intent + Damage',color:'gold',weeks:[
-    {w:'W5',t:'Building Creator MVP',c:['输入 Footprint / Height / Floor Count','生成墙、窗、门和屋顶','暴露关键艺术控制参数','修复穿插、翻面与尺度问题'],d:'Building Creator MVP；参数说明；演示录屏',xp:75,milestone:true},
-    {w:'W6',t:'首次完整双分支闭环',c:['Manual Control 生成一个方案','AI Proposal 生成候选并完成验证','将被接受方案翻译为 Houdini 参数','输出同一 Hero Building 到 Unreal','记录链路中断点'],d:'完整闭环；Manual / AI 对照；UE 场景',xp:85,milestone:true},
-    {w:'W7',t:'损坏 / 磨损系统与比较实验',c:['制作裂缝、缺口或边缘磨损','保留强度、区域、随机种控制','比较 Manual 与 AI-Assisted 方案','记录 AI 真正节省和没有节省的环节'],d:'Damage / Wear v1；对照表；问题清单',xp:65},
-    {w:'W8',t:'Damage MVP 与 Artist Intent 定版',c:['稳定主形体与次生损坏流程','完成 Manual / AI Proposal / Validation 展示图','锁定输入、输出和失败回退方式','完成阶段复盘'],d:'Damage MVP；双分支流程图；阶段演示',xp:90,milestone:true},
+  {id:'m1',label:'M1',name:'Procedural Building',color:'gold',weeks:[
+    {w:'W4',t:'Blockout → Floor / Facade',c:['练习 Primitive Normal、dot product、Connectivity 与 Measure','建立 local frame 与楼层切分','分类 facade_id、floor_id、wall、roof、ground','测试改变建筑高度后的分类稳定性'],d:'从 box 自动分楼层并区分立面的 Building v0.1',xp:65},
+    {w:'W5',t:'Facade → Window / Door',c:['生成窗门放置点并控制间距、边距和局部轴向','使用 Copy to Points 放置模块','暴露 floor height、floor count、window size / spacing 等参数','测试 3 种建筑比例，排查窗户漂移与门的位置'],d:'可调参窗门系统；3 种比例测试记录',xp:70},
+    {w:'W6',t:'Roof / Module / Semantic Data',c:['建立 roof、window_socket、door_socket、corner、ground_contact 等语义','分离 Structure 与 Style','支持替换 Artist-made Window / Door / Signage Modules','测试 3 个建筑变体和至少 2 套立面配置'],d:'Semantic Building v0.8；语义属性表；变体对照',xp:75,milestone:true},
+    {w:'W7',t:'Procedural Building v1 与 HDA',c:['封装 HDA_Aurora_Building_v001','整理参数名称、分组和 Debug Mode','增加 invalid input 检查与合理 fallback','用 5–10 个不同尺寸的输入测试','记录 What broke / Why / How fixed'],d:'Building v1 HDA；输入压力测试；首个错误案例页',xp:90,milestone:true},
   ]},
-  {id:'m3',label:'M3',name:'Growth + Unreal',color:'blue',weeks:[
-    {w:'W9',t:'藤蔓 / 过度生长原型',c:['建立种子点、方向与附着规则','控制生长区域与密度','避免悬空、穿墙和无意义噪声','在 Unreal 验证'],d:'Overgrowth v1；控制参数；UE 截图',xp:55},
-    {w:'W10',t:'Overgrowth MVP',c:['增加遮罩 / 高度 / 朝向控制','完成 2–3 种可信分布','检查性能与实例化策略','固化导出规则'],d:'Overgrowth MVP；性能记录；演示录屏',xp:70,milestone:true},
-    {w:'W11',t:'管线整合',c:['串联 Manual / AI Proposal → Validation → Houdini → UE','让建筑、损坏和藤蔓可组合','完成端到端重建测试','记录失败案例与回退方案'],d:'Integrated Pipeline v1；流程图；失败案例页',xp:85,milestone:true},
-    {w:'W12',t:'Unreal PCG Blockout',c:['用 PCG 布置周边环境 / 街区块面','保持 Hero Building 为视觉中心','控制密度、层级与可读性','完成镜头初版'],d:'PCG Blockout；镜头列表；场景漫游',xp:80,milestone:true},
+  {id:'m2',label:'M2',name:'Artist Input + Robustness',color:'blue',weeks:[
+    {w:'W8',t:'Artist Guide 输入方式验证',c:['比较 Blockout、Object Naming、Guide Mesh、Volume、Attribute、Vertex Color / Mask、Marker / Socket','选出当前项目最清晰的 Artist Input 方式','让 Artist 能明确表达放置、保护或分类意图','记录缺失输入时的默认行为'],d:'Artist Input 规范；至少 2 种输入方式比较；可用示例',xp:65},
+    {w:'W9',t:'Robustness / Edge Case 测试',c:['测试极宽、极窄及不同楼层数','测试不规则比例与缺失输入','测试无效 Guide 和尺寸不匹配模块','修复高频问题并记录仍不支持的情形'],d:'Edge Case 测试表；失败与修复案例；fallback 说明',xp:75,milestone:true},
+    {w:'W10',t:'Scale Test v1 与 Break-even',c:['测试至少 10 个不同 Blockout','覆盖 3 组窗口配置与 2–3 种建筑比例','实测每个资产 Manual 时间、Procedural 时间和修正时间','分开记录 Tool Development 时间','用真实数据估算 Break-even Point，不编造 ROI'],d:'10+ 输入测试；时间测量表；Break-even 初步结论',xp:85,milestone:true},
   ]},
-  {id:'m35',label:'M3.5',name:'最终收口',color:'gold',weeks:[
-    {w:'W13',t:'Final Art / Tech Polish',c:['修复最影响观感的 3–5 个问题','完成材质、灯光、构图与性能整理','录制流程与结果镜头','停止扩展新系统'],d:'Final Candidate；性能检查；视频素材',xp:80,milestone:true},
-    {w:'W14',t:'Portfolio Freeze',c:['完成 Artist Intent 总流程图','展示 Manual Control、AI Proposal 与 Validation','展示 Houdini 控制、UE 结果和前后对比','写清个人职责、挑战、取舍与结论','备份最终版本'],d:'作品集页面；最终视频 / GIF；归档包',xp:100,milestone:true},
+  {id:'m3',label:'M3',name:'Damage / Wear Processor',color:'gold',weeks:[
+    {w:'W11',t:'Large Damage 基础',c:['研究 Boolean、VDB、cutter、remesh、Fuse 与 PolyDoctor','从 Building + Damage Guide / Volume / Mask 产生大块破损','识别切面并输出 interior material group','为缺失或无效 Guide 建立基础错误反馈'],d:'Large Damage 原型；切面材质组；Debug 截图',xp:65},
+    {w:'W12',t:'Secondary Damage / Edgewear',c:['用 curvature、edge angle 和 distance mask 定位磨损','用受控 scatter / Attribute Transfer 生成 chips','加入 controlled noise，避免全表面均匀噪声','输出 wear、damage_border、chips、ground_grime 数据'],d:'Secondary Damage v1；控制参数与对照图',xp:70},
+    {w:'W13',t:'Artist-Controlled Damage',c:['暴露 Damage Strength、Region 和 Seed','支持 Protected Area / Exclusion','支持 Multiple Guide Input','验证艺术家指定位置确实影响输出'],d:'Artist-controlled Damage 工具；Guide 输入与输出对照',xp:75,milestone:true},
+    {w:'W14',t:'Damage Processor v1 与阶段验收',c:['制作 Light / Medium / Heavy 三档破损','至少测试 5 个不同建筑输入','记录失败案例、Debug 方法和 fallback','验证 Building + Damage 可重复运行'],d:'Damage Processor v1；5+ 输入测试；阶段案例页',xp:90,milestone:true},
+  ]},
+  {id:'m4',label:'M4',name:'Unreal + Scale Validation',color:'blue',weeks:[
+    {w:'W15',t:'Houdini → Unreal 生产链路',c:['验证 HDA Input、Parameter Update 和 Recook','检查 Bake、Material Slot 与 Collision','核对 Nanite 和 Replace / Rebuild 工作方式','若 Engine Integration 不可用，采用稳定 FBX / USD 并说明限制'],d:'UE 集成测试；可重复更新资产；导入说明',xp:75,milestone:true},
+    {w:'W16',t:'Batch / Stress Test',c:['组合 10–30 种建筑输入','覆盖不同比例、模块配置与 Damage 状态','记录 Failure Rate、Cook Time、Manual Fix Time','分析重复输入下的稳定性与边缘案例'],d:'Batch 测试矩阵；实测性能与失败率',xp:85,milestone:true},
+    {w:'W17',t:'Production Evaluation：Works → Robust → Scalable',c:['量测 Manual 单资产制作和修改耗时','量测工具开发、新资产生成和参数修改耗时','说明在哪个资产规模后工具产生正 ROI','整理 Works / Robust / Scalable 的证据'],d:'Production Evaluation 对照页；实测 ROI；阶段决策结论',xp:95,milestone:true},
+  ]},
+  {id:'m5',label:'M5',name:'AI-Assisted 实验',color:'gold',weeks:[
+    {w:'W18',t:'建立可比较的 Manual / AI 实验',c:['固定一个 Artist Intent / Damage 探索问题','Branch A：记录 Artist Paint / Guide / Mask 的 Manual 流程','Branch B：白盒截图交给 ComfyUI 生成 2–4 个 Proposal','记录 Accept / Reject / Modify','统计探索时间、Reject Rate 与 Cleanup Cost'],d:'实验方案；Manual 与 AI 候选；验证记录和计时表',xp:80},
+    {w:'W19',t:'评估 AI 是否值得进入生产流程',c:['比较两条路径的探索时间与人工修正时间','记录 AI 是否提出有效的新空间分布','区分 Manual 更快与 AI 更有价值的场景','记录 Human Correction 与是否真正节省时间','据结果决定保留、限制或移除 AI 环节'],d:'AI-Assisted 对照实验；数据决策；Milestone 3 结论',xp:95,milestone:true},
+  ]},
+  {id:'m7',label:'M6–M7',name:'可选扩展与 Case Study',color:'blue',weeks:[
+    {w:'W20',t:'Case Study 结构与可选扩展决策',c:['按 Problem / Context / Constraints 列出案例开篇','整理 Exploration、Alternatives 与 Decision 的证据','只有核心 Gate 全通过时，才从 Overgrowth、PCG、模块、Decal、跨 DCC 或第二风格中选一个','若核心未稳，本周用于修复或补测，不开新系统'],d:'Case Study 大纲；一项有条件的扩展决定或核心问题修复',xp:70},
+    {w:'W21',t:'Case Study：Implementation / Failure / Iteration',c:['解释工具输入、规则、参数与输出','记录至少一个真实失败及修复过程','用图表说明 Robustness、Scale 与 ROI 测量','确认所有技术与时间数据都可追溯'],d:'案例主体草稿；失败与迭代证据；实测数据图表',xp:85,milestone:true},
+    {w:'W22',t:'Portfolio Freeze 与最终展示',c:['完成 Problem：制作问题与传统流程','完成 Context / Constraints：项目背景与限制','呈现 Exploration / Decision：方案比较和选择理由','解释 Implementation：Artist Input、Building、Damage、Houdini → Unreal','展示 3–5 个变体、Edge Case、Batch / Scale Test 与 Debug','展示 Manual vs Procedural 实测时间与 ROI / Break-even','展示 AI Proposal、Artist Validation 和 Manual vs AI 实验结论','记录真实 Failure、Iteration、Impact 与 Reflection','呈现最终 Hero Asset / Scene / Video 和个人职责','归档工程、数据与备份，并确认文件可打开'],d:'完整 Case Study；Portfolio 页面；最终视频；可打开的工程归档',xp:100,milestone:true},
   ]},
 ];
 
@@ -740,17 +755,17 @@ let state = load();
 
 const HABITS = [
   {id:'hands', ico:'🛠️', title:'动手实操',     sub:'Houdini / Unreal 有产出'},
-  {id:'validate', ico:'◆', title:'艺术家确认',  sub:'AI 结果有 Accept / Reject'},
-  {id:'capture', ico:'🎥', title:'录制证据',     sub:'30–90 秒可验证结果'},
-  {id:'scope', ico:'✂️', title:'守住 V1',       sub:'没有 Agent / API / JSON'},
+  {id:'validate', ico:'◆', title:'明确输入',    sub:'Guide / Mask 意图清楚'},
+  {id:'capture', ico:'🎥', title:'记录证据',     sub:'结果、失败或耗时可核对'},
+  {id:'scope', ico:'✂️', title:'守住范围',       sub:'只做当前里程碑重点'},
 ];
 
 const CARD_CATS = ['AI Proposal','Artist Validation','Building','Damage','Growth','Houdini','Unreal','其他'];
 
 function defaultState(){
   return {
-    done:{}, subDone:{}, logs:[], achievements:[], curMonth:'m1', firstDay:null,
-    startDate:'2026-09-17',   // v2 计划开始日期
+    done:{}, subDone:{}, planDone:{}, planSubDone:{}, logs:[], achievements:[], curMonth:'m0', firstDay:null,
+    startDate:'2026-09-17',   // Production Case Study v3 开始日期
     habits:{},        // { "2026-07-22": {watch:true, hands:false, ...} }
     weekReviews:[],   // [ {week:'2026-W30', text:'AI生成的回顾', logs:[...], date:'...'} ]
     cardCat:{},       // { achId: '分类字符串' }
@@ -758,13 +773,30 @@ function defaultState(){
   };
 }
 function load(){
-  try{ const s = JSON.parse(localStorage.getItem(LS_KEY)); return s && s.done ? Object.assign(defaultState(), s) : defaultState(); }
+  try{ const s = JSON.parse(localStorage.getItem(LS_KEY)); return normalizeState(s); }
   catch(e){ return defaultState(); }
+}
+function normalizeState(s){
+  const base=defaultState();
+  if(!s || typeof s!=='object' || Array.isArray(s)) return base;
+  const merged=Object.assign(base,s);
+  ['done','subDone','planDone','planSubDone','habits','cardCat','api'].forEach(k=>{
+    if(!merged[k] || typeof merged[k]!=='object' || Array.isArray(merged[k])) merged[k]=base[k];
+  });
+  ['logs','achievements','weekReviews'].forEach(k=>{ if(!Array.isArray(merged[k])) merged[k]=base[k]; });
+  if(merged.curMonth==='m35') merged.curMonth='m7';
+  if(!PLAN.some(m=>m.id===merged.curMonth)) merged.curMonth=PLAN[0].id;
+  return merged;
 }
 function save(){ localStorage.setItem(LS_KEY, JSON.stringify(state)); }
 
 /* ================= XP / RANK ================= */
-function taskXP(){ let x=0; PLAN.forEach(m=>m.weeks.forEach((wk,i)=>{ if(state.done[m.id+'_'+i]) x+=wk.xp; })); return x; }
+const LEGACY_TASK_XP=[55,55,70,75,75,85,65,90,55,70,85,80,80,100];
+function legacyTaskXPFor(s){
+  const keys=['m1_0','m1_1','m1_2','m1_3','m2_0','m2_1','m2_2','m2_3','m3_0','m3_1','m3_2','m3_3','m35_0','m35_1'];
+  return keys.reduce((sum,key,i)=>sum+(s.done&&s.done[key]?LEGACY_TASK_XP[i]:0),0);
+}
+function taskXP(){ let x=legacyTaskXPFor(state); PLAN.forEach(m=>m.weeks.forEach(wk=>{ if(state.planDone[wk.w]) x+=wk.xp; })); return x; }
 function achXP(){ return state.achievements.reduce((s,a)=>s+(a.xp||XP_PER_ACH),0); }
 function totalXP(){ return taskXP() + state.logs.length*XP_PER_LOG + achXP(); }
 function rankFor(xp){ let r=RANKS[0],lv=1; for(let i=0;i<RANKS.length;i++){ if(xp>=RANKS[i].min){ r=RANKS[i]; lv=i+1; } } 
@@ -782,8 +814,11 @@ function weekLabel(date){ // returns "2026-W30"
 function currentWeekLabel(){ return weekLabel(new Date()); }
 
 /* ================= RENDER ================= */
-function monthProgress(mid){ const m=PLAN.find(x=>x.id===mid); let d=0; m.weeks.forEach((wk,i)=>{ if(state.done[mid+'_'+i]) d++; }); return {done:d,total:m.weeks.length,pct:Math.round(d/m.weeks.length*100)}; }
-function totalProgress(){ let d=0,t=0; PLAN.forEach(m=>m.weeks.forEach((wk,i)=>{ t++; if(state.done[m.id+'_'+i]) d++; })); return {done:d,total:t,pct:Math.round(d/t*100)}; }
+function monthProgress(mid){ const m=PLAN.find(x=>x.id===mid); if(!m)return {done:0,total:0,pct:0}; let d=0; m.weeks.forEach(wk=>{ if(state.planDone[wk.w]) d++; }); return {done:d,total:m.weeks.length,pct:Math.round(d/m.weeks.length*100)}; }
+function totalProgress(){ let d=0,t=0; PLAN.forEach(m=>m.weeks.forEach(wk=>{ t++; if(state.planDone[wk.w]) d++; })); return {done:d,total:t,pct:Math.round(d/t*100)}; }
+function legacyWeekCountFor(s){ return ['m1_0','m1_1','m1_2','m1_3','m2_0','m2_1','m2_2','m2_3','m3_0','m3_1','m3_2','m3_3','m35_0','m35_1'].filter(k=>s.done&&s.done[k]).length; }
+function legacyWeekCount(){ return legacyWeekCountFor(state); }
+function legacySubtaskCount(){ return Object.values(state.subDone||{}).filter(Boolean).length; }
 
 let prevLv = rankFor(totalXP()).lv;
 
@@ -808,7 +843,8 @@ function render(){
   const tp = totalProgress();
   document.getElementById('totalPct').textContent = tp.pct+'%';
   document.getElementById('totalFill').style.width = tp.pct+'%';
-  document.getElementById('totalSub').textContent = `共 ${tp.total} 周任务 · 已完成 ${tp.done} 项`;
+  document.getElementById('totalSub').textContent = `新计划 ${tp.done}/${tp.total} 周 · 旧计划历史进度 ${legacyWeekCount()}/14 周已保留`;
+  document.getElementById('legacyProgressNote').textContent = `旧版明细勾选 ${legacySubtaskCount()} 项 · 已保留 ${state.logs.length} 条日志、${state.achievements.length} 条成就、习惯记录和 AI 设置`;
   // month mini bars
   const mm = document.getElementById('monthMini'); mm.innerHTML='';
   PLAN.forEach(m=>{
@@ -857,12 +893,11 @@ function renderTasks(m){
   document.getElementById('taskCount').textContent = `${p.done} / ${p.total}`;
   const area = document.getElementById('taskArea'); area.innerHTML='';
   m.weeks.forEach((wk,i)=>{
-    const key = m.id+'_'+i;
-    const tutKey = m.id+'_'+i;
-    const done = !!state.done[key];
-    const tuts = TUTORIALS[tutKey] || [];
+    const key = wk.w;
+    const done = !!state.planDone[key];
+    const tuts = [];
     const g = document.createElement('div'); g.className='wk-group';
-    const subCount=(wk.c||[]).filter((_,j)=>state.subDone[key+'_'+j]).length;
+    const subCount=(wk.c||[]).filter((_,j)=>state.planSubDone[key+'_'+j]).length;
     g.innerHTML = `<div class="wk-title">${wk.w}${wk.milestone?' <span class="star">⭐ 里程碑</span>':''}<span class="week-mini-progress">${subCount}/${(wk.c||[]).length} 项</span></div>`;
 
     // task row (checkbox only — not the tutorial toggle)
@@ -871,8 +906,8 @@ function renderTasks(m){
     t.innerHTML = `<div class="box">✓</div><div class="tx">${wk.t}</div><div class="xp">+${wk.xp}</div>`;
     t.onclick = (e)=>{
       if(e.target.closest('.tut-toggle')||e.target.closest('.tut-links')) return;
-      state.done[key] = !state.done[key]; save();
-      if(state.done[key]){
+      state.planDone[key] = !state.planDone[key]; save();
+      if(state.planDone[key]){
         toast(wk.milestone?`🎖️ 里程碑达成！+${wk.xp} XP`:`✓ 完成！+${wk.xp} XP`, wk.milestone?'gold':'');
         if(monthProgress(m.id).pct===100) setTimeout(()=>toast(`🏔️ ${m.label} ${m.name} 全部完成！`,'gold'),700);
       }
@@ -913,12 +948,12 @@ function renderTasks(m){
         const subKey=key+'_'+j;
         const label=document.createElement('label');
         label.className='week-check';
-        label.innerHTML=`<input type="checkbox" ${state.subDone[subKey]?'checked':''}><span>${escapeHtml(item)}</span>`;
+        label.innerHTML=`<input type="checkbox" ${state.planSubDone[subKey]?'checked':''}><span>${escapeHtml(item)}</span>`;
         label.querySelector('input').onchange=(e)=>{
-          state.subDone[subKey]=e.target.checked;
-          const allDone=wk.c.every((_,n)=>state.subDone[key+'_'+n]);
-          if(allDone && !state.done[key]){
-            state.done[key]=true;
+          state.planSubDone[subKey]=e.target.checked;
+          const allDone=wk.c.every((_,n)=>state.planSubDone[key+'_'+n]);
+          if(allDone && !state.planDone[key]){
+            state.planDone[key]=true;
             toast(`✓ ${wk.w} 必做项全部完成！+${wk.xp} XP`,wk.milestone?'gold':'');
           }
           save(); render();
@@ -984,7 +1019,7 @@ function renderCountdown(){
     cdPace.innerHTML=''; return;
   }
   const start = new Date(state.startDate+'T00:00:00');
-  const end   = new Date(start); end.setDate(end.getDate()+98);
+  const end   = new Date(start); end.setDate(end.getDate()+154);
   const now   = new Date(); now.setHours(0,0,0,0);
   const totalDays = Math.round((end-start)/86400000);
   const elapsed   = Math.max(0,Math.round((now-start)/86400000));
@@ -1135,7 +1170,7 @@ document.getElementById('btnAch').onclick = async ()=>{
   // 调 AI 评分（后台静默，不占大 AI 面板）
   try{
     const {base,model,key}=state.api;
-    const sys=`你是资深 Environment TA / Houdini / ComfyUI 技术美术导师。学习者正按「曙光号 AI-Assisted Pipeline v2」推进 Artist Intent（Manual / AI Proposal）→ Artist Validation → Houdini Processor → Unreal。评估计划外收获是否强化这条可控闭环。返回严格 JSON（不要 markdown 或多余文字）：{"xp":数字,"note":"一句话评语（≤25字，中文）"}。xp：40=直接强化闭环，20=周边支撑，10=容易造成 Scope Creep 或仅泛用。`;
+    const sys=`你是资深 Environment TA / Houdini / Unreal 导师。学习者正在制作 Production Case Study v3，核心是 Procedural Building、Artist Input、Robustness、Damage、Unreal、Scale / ROI；AI 辅助实验在后期验证。评估计划外收获是否支持当前阶段，避免鼓励 Scope Creep。返回严格 JSON（不要 markdown 或多余文字）：{"xp":数字,"note":"一句话评语（≤25字，中文）"}。xp：40=直接强化当前生产案例，20=周边支撑，10=容易造成范围膨胀或仅泛用。`;
     const user=`学习者新记录的计划外收获：「${text}」`;
     const res=await fetch(base,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
       body:JSON.stringify({model,temperature:0.3,messages:[{role:'system',content:sys},{role:'user',content:user}]})});
@@ -1231,9 +1266,16 @@ document.getElementById('btnExport').onclick=()=>{
 document.getElementById('btnImport').onclick=()=>document.getElementById('importFile').click();
 document.getElementById('importFile').onchange=(e)=>{
   const f=e.target.files[0]; if(!f)return; const r=new FileReader();
-  r.onload=()=>{ try{ const s=JSON.parse(r.result); state=Object.assign(defaultState(),s); save(); prevLv=rankFor(totalXP()).lv; render(); dataOverlay.classList.remove('show'); toast('⬆ 导入成功'); }
-    catch(err){ toast('导入失败：文件格式不对'); } };
+  r.onload=()=>{ try{
+    const raw=JSON.parse(r.result);
+    if(!raw || typeof raw!=='object' || Array.isArray(raw) || !raw.done || typeof raw.done!=='object') throw new Error('invalid backup');
+    const imported=normalizeState(raw);
+    const preservedWeeks=legacyWeekCountFor(imported);
+    state=imported; save(); prevLv=rankFor(totalXP()).lv; render(); dataOverlay.classList.remove('show');
+    toast(preservedWeeks?`⬆ 导入成功 · 保留旧计划 ${preservedWeeks}/14 周进度`:'⬆ 导入成功 · 所有记录已恢复');
+  } catch(err){ toast('导入失败：请选择打卡站导出的 JSON 备份'); } };
   r.readAsText(f);
+  e.target.value='';
 };
 document.getElementById('btnReset').onclick=()=>{
   if(confirm('确定清空所有进度、日志和成就吗？此操作不可恢复（建议先导出备份）。')){
@@ -1246,13 +1288,13 @@ document.getElementById('btnReset').onclick=()=>{
 function buildContext(){
   const tp=totalProgress(); const xp=totalXP(); const {rank,lv}=rankFor(xp);
   let lines=[];
-  lines.push(`学习者从 2026-09-17 起按 14 周计划完成「曙光号 AI-Assisted Environment Pipeline v2」，MVP 是 1 个建筑完整闭环。`);
+  lines.push(`学习者从 2026-09-17 起按 22 周「曙光号 Environment TA Production Case Study v3」推进：Procedural Building → Artist Input / Robustness → Damage → Unreal / Scale / ROI → AI-Assisted 实验 → Case Study。`);
   lines.push(`当前等级 Lv.${lv}「${rank.name}」，总经验 ${xp} XP。总进度 ${tp.pct}%（${tp.done}/${tp.total} 周任务）。`);
   lines.push(`连续打卡 ${calcStreak()} 天，累计打卡 ${uniqueDays()} 天。额外（计划外）成就 ${state.achievements.length} 条。`);
   lines.push(`\n各月进度：`);
   PLAN.forEach(m=>{ const p=monthProgress(m.id); lines.push(`- ${m.label} ${m.name}：${p.pct}%（${p.done}/${p.total}）`); });
   lines.push(`\n当前聚焦阶段：${PLAN.find(x=>x.id===state.curMonth).label}。已完成的任务：`);
-  PLAN.forEach(m=>m.weeks.forEach((wk,i)=>{ if(state.done[m.id+'_'+i]) lines.push(`  [✓] ${m.label}${wk.w} ${wk.t}`); }));
+  PLAN.forEach(m=>m.weeks.forEach(wk=>{ if(state.planDone[wk.w]) lines.push(`  [✓] ${m.label}${wk.w} ${wk.t}`); }));
   const recentLogs=[...state.logs].slice(-8).reverse();
   if(recentLogs.length){ lines.push(`\n最近日志：`); recentLogs.forEach(l=>lines.push(`  · ${l.date}：${l.text}`)); }
   if(state.achievements.length){ lines.push(`\n计划外收获：`); state.achievements.slice(-8).forEach(a=>lines.push(`  · ${a.text}`)); }
@@ -1274,7 +1316,7 @@ async function callAI(systemPrompt, userPrompt){
 }
 
 document.getElementById('btnAiEval').onclick=()=>{
-  const sys=`你是一位资深 Environment TA 导师，专精 Houdini、ComfyUI controlled generation、HDA 与 Unreal。学习者的 v2 主线是 Artist Intent（Manual / AI Proposal）→ Artist Validation → Houdini Processor → Unreal，MVP 只要求 1 栋楼但链路必须完整。请评估节奏、可验证产物、Validation 是否真实存在，以及是否过早进入 Agent/API/JSON/自动化。给出下周最重要的 2–3 件事。中文，300 字内。`;
+  const sys=`你是一位资深 Environment TA / Houdini / Unreal 导师。学习者按 Production Case Study v3 推进：先做好 Procedural Building、Artist Input、Robustness、Damage、Houdini→Unreal 与真实 Scale / ROI 测量；AI 对照实验放在 W18–W19。请围绕当前阶段评估进度、可验证产物、失败与测量质量，给出下周最重要的 2–3 件事。不要鼓励跳过核心 Gate。中文，300 字内。`;
   callAI(sys, buildContext());
 };
 document.getElementById('btnAiPlan').onclick=()=>{
@@ -1296,11 +1338,11 @@ document.getElementById('btnAiWeek').onclick = async ()=>{
   else ctx+=`\n本周无日志记录。\n`;
   // 本周勾选
   const weekDone=[];
-  PLAN.forEach(m=>m.weeks.forEach((wk2,i)=>{ if(state.done[m.id+'_'+i]) weekDone.push(`${m.label}${wk2.w} ${wk2.t}`); }));
+  PLAN.forEach(m=>m.weeks.forEach(wk2=>{ if(state.planDone[wk2.w]) weekDone.push(`${m.label}${wk2.w} ${wk2.t}`); }));
   ctx+=`\n已完成任务（累计）：${weekDone.length}项\n`;
   const weekAch=state.achievements.filter(a=>{ const ad=new Date(a.date.replace(/\./g,'-')); return ad>=weekStart; });
   if(weekAch.length){ ctx+=`\n本周额外收获：\n`; weekAch.forEach(a=>ctx+=`  · ${a.text}\n`); }
-  const sys=`你是资深 Environment TA / Houdini / ComfyUI 学习导师。请为「曙光号 AI-Assisted Pipeline v2」生成战报：\n【本周一句话】\n【可验证产物】\n【Artist Validation 证据】\n【Scope Creep】\n【下周唯一重点】\n若 AI Proposal 没进入 Guide/Mask/Houdini，就明确指出它还只是参考图。中文，220 字内。`;
+  const sys=`你是资深 Environment TA / Houdini / Unreal 学习导师。请为「曙光号 Production Case Study v3」生成周报：\n【本周解决的 Production Problem】\n【可验证产物与失败修复】\n【耗时 / 稳健性 / ROI 证据】\n【范围控制】\n【下周唯一重点】\n只有 W18–W19 才进入 AI Proposal 对照实验，其余阶段优先完成当前 Building、Artist Input、Damage、Unreal 或规模验证 Gate。中文，220 字内。`;
   const out=document.getElementById('aiOutReview');
   out.className='ai-out-review show think'; out.textContent='AI 正在生成本周战报…';
   document.getElementById('reviewDrawer').classList.add('open');
